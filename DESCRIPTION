@@ -6,7 +6,11 @@ Description: Allows you to easily include (small) datasets directly in notebooks
 Depends: R (>= 3.4.3)
 Imports:
   clipr
-License: GPL v3
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1

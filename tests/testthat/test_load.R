@@ -108,5 +108,16 @@ test_that("when there is a difference between new data and cached data, the new 
   expect_true(all.equal(b, iris))
 })
 
+test_that("when new data produces error, cached data is returned", {
+  b <- load_rde_var(FALSE, {stop("some error")}, expanded_iris)
 
+  expect_equal(length(b), 5)
+  expect_true(all.equal(b, expanded_iris))
+})
 
+test_that("when new data produces error, message is raised", {
+  expect_message(
+    load_rde_var(FALSE, {stop("some error")}, expanded_iris),
+    "Error raised when loading new data"
+  )
+})

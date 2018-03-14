@@ -1,32 +1,14 @@
 
 
-# a <- iris
-#
-# library(clipr)
-#
-# Sys.getenv("DISPLAY")
-#
-# con <- textConnection(NULL, open="w+t")
-# dump("a", file=con, evaluate = TRUE)
-# txt <- textConnectionValue(con)
-# clipr::write_clip(txt)
-# close(con)
-#
-# fcn <- function(x) {
-#   x
-# }
-
-
 #' Title
 #'
-#' @param var
+#' @param var the variable that you want to copy
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @importFrom clipr write_clip
 #'
-#' @examples
 copy_rde_var <- function(var) {
   on.exit({
     close(con)
