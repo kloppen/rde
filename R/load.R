@@ -19,7 +19,7 @@ load_rde_var <- function(useCache = FALSE,
   tryCatch(
     {
       loadFcnSub <- substitute(loadFcn)
-      loadFcnResult <- eval(loadFcnSub, parent.env(environment()))
+      loadFcnResult <- eval(loadFcnSub, environment())
 
       if(!isTRUE(all.equal(cache, loadFcnResult))) {
         warning("Cached data is different from loaded data")

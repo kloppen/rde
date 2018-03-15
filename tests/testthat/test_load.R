@@ -81,6 +81,20 @@ modified_iris_3 <- {
             class = "data.frame")
 }
 
+# The first three rows from iris, but with Sepal.Length doubled
+scaled_iris_3 <- {
+  structure(list(Sepal.Length = c(10.2, 9.8, 9.4),
+                 Sepal.Width = c(3.5, 3, 3.2),
+                 Petal.Length = c(1.4, 1.4, 1.3),
+                 Petal.Width = c(0.2, 0.2, 0.2),
+                 Species = structure(c(1L, 1L, 1L),
+                                     .Label = c("setosa", "versicolor", "virginica"),
+                                     class = "factor")),
+            .Names = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"),
+            row.names = c(NA, 3L),
+            class = "data.frame")
+}
+
 test_that("cached data loaded as expected", {
   b <- load_rde_var(TRUE, {iris}, expanded_iris)
 
@@ -93,6 +107,21 @@ test_that("new data loaded as expected", {
 
   expect_equal(length(b), 5)
   expect_true(all.equal(b, iris))
+})
+
+test_that("new data with multiple lines", {
+  b <- load_rde_var(
+    FALSE,
+    {
+      a <- head(iris, 3)
+      a$Sepal.Length <- a$Sepal.Length *2
+      a
+    },
+    scaled_iris_3
+  )
+
+  expect_equal(length(b), 5)
+  expect_true(all.equal(b, scaled_iris_3))
 })
 
 test_that("difference between new data and cahced data causes warning", {
@@ -120,4 +149,39 @@ test_that("when new data produces error, message is raised", {
     load_rde_var(FALSE, {stop("some error")}, expanded_iris),
     "Error raised when loading new data"
   )
+})
+
+test_that("data load code can access variables from the calling environment", {
+  mult <- 2
+  b <- load_rde_var(
+    FALSE,
+    {
+      a <- head(iris, 3)
+      a$Sepal.Length <- a$Sepal.Length * mult
+      a
+    },
+    scaled_iris_3
+  )
+
+  expect_equal(length(b), 5)
+  expect_true(all.equal(b, scaled_iris_3))
+})
+
+test_that("expressions in load code don't affect enclosing environment variables", {
+  mult <- 1
+  b <- load_rde_var(
+    FALSE,
+    {
+      mult <- mult * 2
+      a <- head(iris, 3)
+      a$Sepal.Length <- a$Sepal.Length * mult
+      expect_equal(mult, 2)
+      a
+    },
+    scaled_iris_3
+  )
+
+  expect_equal(mult, 1)
+  expect_equal(length(b), 5)
+  expect_true(all.equal(b, scaled_iris_3))
 })
