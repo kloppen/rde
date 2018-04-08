@@ -19,5 +19,3 @@ copy_rde_var <- function(var) {
   txt <- textConnectionValue(con)
   clipr::write_clip(txt)
 }
-
-# copy_rde_var(a)
