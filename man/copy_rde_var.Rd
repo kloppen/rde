@@ -4,10 +4,14 @@
 \alias{copy_rde_var}
 \title{Title}
 \usage{
-copy_rde_var(var)
+copy_rde_var(var, add.linebreaks = TRUE)
 }
 \arguments{
 \item{var}{the variable that you want to copy}
+
+\item{add.linebreaks}{indicates whether you want the output be be a single
+line (FALSE) or you want linebreaks to be added to help with RStudio's
+auto-indentation}
 }
 \value{
 None
