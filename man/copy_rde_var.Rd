@@ -4,7 +4,7 @@
 \alias{copy_rde_var}
 \title{Title}
 \usage{
-copy_rde_var(var, add.linebreaks = TRUE)
+copy_rde_var(var, add.linebreaks = TRUE, no.clipboard = FALSE)
 }
 \arguments{
 \item{var}{the variable that you want to copy}
@@ -12,9 +12,14 @@ copy_rde_var(var, add.linebreaks = TRUE)
 \item{add.linebreaks}{indicates whether you want the output be be a single
 line (FALSE) or you want linebreaks to be added to help with RStudio's
 auto-indentation}
+
+\item{no.clipboard}{the default is FALSE. Indicates that you want the
+function to return the string that would have been copied to the clipboard
+without actually copying to the clipboard. This option is mainly used
+for testing purposes. Normal users will not use it.}
 }
 \value{
-None
+None (or string if no.clipboard=TRUE)
 }
 \description{
 Title

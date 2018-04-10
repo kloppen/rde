@@ -6,13 +6,17 @@
 #' @param add.linebreaks indicates whether you want the output be be a single
 #' line (FALSE) or you want linebreaks to be added to help with RStudio's
 #' auto-indentation
+#' @param no.clipboard the default is FALSE. Indicates that you want the
+#' function to return the string that would have been copied to the clipboard
+#' without actually copying to the clipboard. This option is mainly used
+#' for testing purposes. Normal users will not use it.
 #'
-#' @return None
+#' @return None (or string if no.clipboard=TRUE)
 #' @export
 #'
 #' @importFrom clipr write_clip
 #'
-copy_rde_var <- function(var, add.linebreaks=TRUE) {
+copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE) {
   on.exit({
     close(con)
   })
@@ -23,6 +27,9 @@ copy_rde_var <- function(var, add.linebreaks=TRUE) {
   txt <- paste(txt, collapse = " ")
   if (add.linebreaks) {
     txt <- break_parenthesis(txt)
+  }
+  if (no.clipboard) {
+    return(txt)
   }
   clipr::write_clip(txt)
 }
