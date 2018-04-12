@@ -21,44 +21,56 @@ copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE) {
     close(con)
   })
 
-  con <- textConnection(NULL, open = "w+t")
-  dput(var, file = con)
-  txt <- textConnectionValue(con)
-  txt <- paste(txt, collapse = " ")
-  if (add.linebreaks) {
-    txt <- break_parenthesis(txt)
-  }
+  con <- file(open="w+b")
+  saveRDS(var, file = con)
+
+  txt <- base64_encode(con)
+
+  # TODO: Add linebreaks
+  # TODO: Maybe add compression?
+
   if (no.clipboard) {
     return(txt)
   }
   clipr::write_clip(txt)
 }
 
+base64_encode <- function(con) {
+  b64 <- c(LETTERS, letters, 0:9, "+", "/")
+  padding <- "="
 
-break_parenthesis <- function(code) {
-  re <- "^([^()]*\\()(.*)$"
-  if (grepl(re, code)) {
-    # contains a parenthesis
-    before <- sub(re, "\\1", code)
-    # before also includes the opening parenthesis itself
-    after <- sub(re, "\\2", code)
-    processed_after <- break_parenthesis(after)
-    return(paste(before, processed_after, sep = "\n"))
-  } else {
-    # no opening parenthesis found
-    re <- "^([^)]*\\),?)(.*)$"
-    if (grepl(re, code)) {
-      # contains a closing parenthesis
-      before <- sub(re, "\\1", code)
-      # before also includes closing parenthesis and optional comma
-      after <- sub(re, "\\2", code)
-      processed_after <- break_parenthesis(after)
-      return(paste(before, processed_after, sep = "\n"))
+  b64data <- character(0)
+
+  while (TRUE) {
+    r0 <- readBin(con = con, what = "raw")
+    r1 <- readBin(con = con, what = "raw")
+    r2 <- readBin(con = con, what = "raw")
+    if(length(r0) == 0 && length(r1) == 0 && length(r2) == 0) {
+      break()
+    }
+    else if(length(r1) == 0 && length(r2) == 0) {
+      num <- as.integer(r0) * 2^16
+      c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
+      c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
+      b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], "=", "=")
+    }
+    else if(length(r2) == 0) {
+      num <- as.integer(r0) * 2^16 + as.integer(r1) * 2^8
+      c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
+      c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
+      c2 <- bitwShiftR(bitwAnd(num, 0xFC0), 6)
+      b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], b64[c2 + 1], "=")
     } else {
-      # does not contain a closing parenthesis
-      return(code)
+      num <- as.integer(r0) * 2^16 + as.integer(r1) * 2^8 + as.integer(r2)
+      c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
+      c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
+      c2 <- bitwShiftR(bitwAnd(num, 0xFC0), 6)
+      c3 <- bitwShiftR(bitwAnd(num, 0x3F), 0)
+      b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], b64[c2 + 1], b64[c3 + 1])
     }
   }
-}
 
+  b64data <- paste0(b64data, collapse = "")
+  return(b64data)
+}
 
