@@ -12,8 +12,15 @@
 load_rde_var <- function(useCache = FALSE,
                          loadFcn,
                          cache) {
+  on.exit({
+    close(cache_data_con)
+  })
+
+  cache_data_con <- base64_decode(cache)
+  cache_data <- readRDS(cache_data_con)
+
   if(useCache) {
-    return(cache)
+    return(cache_data)
   }
 
   tryCatch(
@@ -21,7 +28,7 @@ load_rde_var <- function(useCache = FALSE,
       loadFcnSub <- substitute(loadFcn)
       loadFcnResult <- eval(loadFcnSub, environment())
 
-      if(!isTRUE(all.equal(cache, loadFcnResult))) {
+      if(!isTRUE(all.equal(cache_data, loadFcnResult))) {
         warning("Cached data is different from loaded data")
       }
 
@@ -33,7 +40,7 @@ load_rde_var <- function(useCache = FALSE,
         e,
         sep = "\n"
       ))
-      return(cache)
+      return(cache_data)
     }
   )
 }
