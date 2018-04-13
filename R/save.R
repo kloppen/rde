@@ -3,9 +3,8 @@
 #' Title
 #'
 #' @param var the variable that you want to copy
-#' @param add.linebreaks indicates whether you want the output be be a single
-#' line (FALSE) or you want linebreaks to be added to help with RStudio's
-#' auto-indentation
+#' @param line.width adds a new line every line.width characters (-1 for no
+#' linebreaks)
 #' @param no.clipboard the default is FALSE. Indicates that you want the
 #' function to return the string that would have been copied to the clipboard
 #' without actually copying to the clipboard. This option is mainly used
@@ -19,7 +18,7 @@
 #'
 #' @importFrom clipr write_clip
 #'
-copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE, max_size=8000000L) {
+copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE, max_size=8000000L) {
   on.exit({
     close(con)
   })
@@ -31,7 +30,10 @@ copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE, max_size=
 
   txt <- base64_encode(bin_data)
 
-  # TODO: Add linebreaks
+  txt <- gsub(
+    paste0("(.{", line.width, "})")
+    , "\\1\n", txt
+  )
 
   if (no.clipboard) {
     return(txt)

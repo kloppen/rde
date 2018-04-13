@@ -16,7 +16,8 @@ load_rde_var <- function(useCache = FALSE,
     close(cache_data_con)
   })
 
-  cache_data_compressed <- base64_decode(cache)
+  cache_no_whitespace <- gsub("[[:space:]]", "", cache)
+  cache_data_compressed <- base64_decode(cache_no_whitespace)
   cache_data_uncompressed <- memDecompress(cache_data_compressed, type = "bzip2", asChar = FALSE)
   cache_data_con <- file(open="w+b")
   writeBin(cache_data_uncompressed, cache_data_con)
