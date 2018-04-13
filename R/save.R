@@ -10,24 +10,28 @@
 #' function to return the string that would have been copied to the clipboard
 #' without actually copying to the clipboard. This option is mainly used
 #' for testing purposes. Normal users will not use it.
+#' @param max_size the maximum size of the object, before compression. In
+#' most cases, you should be able to keep the default of about 8 MB, but for
+#' very large data, you might need to increase this.
 #'
 #' @return None (or string if no.clipboard=TRUE)
 #' @export
 #'
 #' @importFrom clipr write_clip
 #'
-copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE) {
+copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE, max_size=8000000L) {
   on.exit({
     close(con)
   })
 
   con <- file(open="w+b")
   saveRDS(var, file = con)
+  bin_data <- readBin(con = con, what = "raw", n = max_size)
+  bin_data <- memCompress(bin_data, type = "bzip2")
 
-  txt <- base64_encode(con)
+  txt <- base64_encode(bin_data)
 
   # TODO: Add linebreaks
-  # TODO: Maybe add compression?
 
   if (no.clipboard) {
     return(txt)
@@ -35,18 +39,18 @@ copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE) {
   clipr::write_clip(txt)
 }
 
-base64_encode <- function(con) {
+base64_encode <- function(bin_data) {
   b64 <- c(LETTERS, letters, 0:9, "+", "/")
   padding <- "="
 
   b64data <- character(0)
 
-  while (TRUE) {
-    r0 <- readBin(con = con, what = "raw")
-    r1 <- readBin(con = con, what = "raw")
-    r2 <- readBin(con = con, what = "raw")
+  for (i in 1:ceiling(length(bin_data) / 3)) {
+    r0 <- if ((i - 1) * 3 + 0 <= length(bin_data)) bin_data[(i - 1) * 3 + 1] else 0L
+    r1 <- if ((i - 1) * 3 + 1 <= length(bin_data)) bin_data[(i - 1) * 3 + 2] else 0L
+    r2 <- if ((i - 1) * 3 + 2 <= length(bin_data)) bin_data[(i - 1) * 3 + 3] else 0L
     if(length(r0) == 0 && length(r1) == 0 && length(r2) == 0) {
-      break()
+      break()  # should never get here
     }
     else if(length(r1) == 0 && length(r2) == 0) {
       num <- as.integer(r0) * 2^16

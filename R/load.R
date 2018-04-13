@@ -16,7 +16,10 @@ load_rde_var <- function(useCache = FALSE,
     close(cache_data_con)
   })
 
-  cache_data_con <- base64_decode(cache)
+  cache_data_compressed <- base64_decode(cache)
+  cache_data_uncompressed <- memDecompress(cache_data_compressed, type = "bzip2", asChar = FALSE)
+  cache_data_con <- file(open="w+b")
+  writeBin(cache_data_uncompressed, cache_data_con)
   cache_data <- readRDS(cache_data_con)
 
   if(useCache) {
@@ -80,9 +83,7 @@ base64_decode <- function(txt) {
       as.raw(r[3])
     ))
   }))
-  con <- file(open="w+b")
-  writeBin(res, con)
-  return(con)
+  return(res)
 }
 
 
