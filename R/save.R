@@ -3,62 +3,82 @@
 #' Title
 #'
 #' @param var the variable that you want to copy
-#' @param add.linebreaks indicates whether you want the output be be a single
-#' line (FALSE) or you want linebreaks to be added to help with RStudio's
-#' auto-indentation
+#' @param line.width adds a new line every line.width characters (-1 for no
+#' linebreaks)
 #' @param no.clipboard the default is FALSE. Indicates that you want the
 #' function to return the string that would have been copied to the clipboard
 #' without actually copying to the clipboard. This option is mainly used
 #' for testing purposes. Normal users will not use it.
+#' @param max_size the maximum size of the object, before compression. In
+#' most cases, you should be able to keep the default of about 8 MB, but for
+#' very large data, you might need to increase this.
 #'
 #' @return None (or string if no.clipboard=TRUE)
 #' @export
 #'
 #' @importFrom clipr write_clip
 #'
-copy_rde_var <- function(var, add.linebreaks=TRUE, no.clipboard=FALSE) {
+copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE, max_size=8000000L) {
   on.exit({
     close(con)
   })
 
-  con <- textConnection(NULL, open = "w+t")
-  dput(var, file = con)
-  txt <- textConnectionValue(con)
-  txt <- paste(txt, collapse = " ")
-  if (add.linebreaks) {
-    txt <- break_parenthesis(txt)
+  con <- file(open="w+b")
+  saveRDS(var, file = con)
+  bin_data <- readBin(con = con, what = "raw", n = max_size)
+  bin_data <- memCompress(bin_data, type = "bzip2")
+
+  txt <- base64_encode(bin_data)
+
+  if (line.width > 0) {
+    txt <- gsub(
+      paste0("(.{", line.width, "})")
+      , "\\1\n", txt
+    )
   }
+
   if (no.clipboard) {
     return(txt)
   }
   clipr::write_clip(txt)
 }
 
+base64_encode <- function(bin_data) {
+  b64 <- c(LETTERS, letters, 0:9, "+", "/")
+  padding <- "="
 
-break_parenthesis <- function(code) {
-  re <- "^([^()]*\\()(.*)$"
-  if (grepl(re, code)) {
-    # contains a parenthesis
-    before <- sub(re, "\\1", code)
-    # before also includes the opening parenthesis itself
-    after <- sub(re, "\\2", code)
-    processed_after <- break_parenthesis(after)
-    return(paste(before, processed_after, sep = "\n"))
-  } else {
-    # no opening parenthesis found
-    re <- "^([^)]*\\),?)(.*)$"
-    if (grepl(re, code)) {
-      # contains a closing parenthesis
-      before <- sub(re, "\\1", code)
-      # before also includes closing parenthesis and optional comma
-      after <- sub(re, "\\2", code)
-      processed_after <- break_parenthesis(after)
-      return(paste(before, processed_after, sep = "\n"))
+  b64data <- character(0)
+
+  for (i in 1:ceiling(length(bin_data) / 3)) {
+    r0 <- if ((i - 1) * 3 + 0 < length(bin_data)) bin_data[(i - 1) * 3 + 1] else raw(0)
+    r1 <- if ((i - 1) * 3 + 1 < length(bin_data)) bin_data[(i - 1) * 3 + 2] else raw(0)
+    r2 <- if ((i - 1) * 3 + 2 < length(bin_data)) bin_data[(i - 1) * 3 + 3] else raw(0)
+    if(length(r0) == 0 && length(r1) == 0 && length(r2) == 0) {
+      break()  # should never get here
+    }
+    else if(length(r1) == 0 && length(r2) == 0) {
+      num <- as.integer(r0) * 2^16
+      c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
+      c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
+      b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], "=", "=")
+    }
+    else if(length(r2) == 0) {
+      num <- as.integer(r0) * 2^16 + as.integer(r1) * 2^8
+      c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
+      c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
+      c2 <- bitwShiftR(bitwAnd(num, 0xFC0), 6)
+      b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], b64[c2 + 1], "=")
     } else {
-      # does not contain a closing parenthesis
-      return(code)
+      num <- as.integer(r0) * 2^16 + as.integer(r1) * 2^8 + as.integer(r2)
+      c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
+      c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
+      c2 <- bitwShiftR(bitwAnd(num, 0xFC0), 6)
+      c3 <- bitwShiftR(bitwAnd(num, 0x3F), 0)
+      b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], b64[c2 + 1], b64[c3 + 1])
     }
   }
-}
 
+  b64data <- paste0(b64data, collapse = "")
+  return(b64data)
+}
 

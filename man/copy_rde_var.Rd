@@ -4,19 +4,23 @@
 \alias{copy_rde_var}
 \title{Title}
 \usage{
-copy_rde_var(var, add.linebreaks = TRUE, no.clipboard = FALSE)
+copy_rde_var(var, line.width = 80L, no.clipboard = FALSE,
+  max_size = 8000000L)
 }
 \arguments{
 \item{var}{the variable that you want to copy}
 
-\item{add.linebreaks}{indicates whether you want the output be be a single
-line (FALSE) or you want linebreaks to be added to help with RStudio's
-auto-indentation}
+\item{line.width}{adds a new line every line.width characters (-1 for no
+linebreaks)}
 
 \item{no.clipboard}{the default is FALSE. Indicates that you want the
 function to return the string that would have been copied to the clipboard
 without actually copying to the clipboard. This option is mainly used
 for testing purposes. Normal users will not use it.}
+
+\item{max_size}{the maximum size of the object, before compression. In
+most cases, you should be able to keep the default of about 8 MB, but for
+very large data, you might need to increase this.}
 }
 \value{
 None (or string if no.clipboard=TRUE)

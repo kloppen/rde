@@ -12,8 +12,19 @@
 load_rde_var <- function(useCache = FALSE,
                          loadFcn,
                          cache) {
+  on.exit({
+    close(cache_data_con)
+  })
+
+  cache_no_whitespace <- gsub("[[:space:]]", "", cache)
+  cache_data_compressed <- base64_decode(cache_no_whitespace)
+  cache_data_uncompressed <- memDecompress(cache_data_compressed, type = "bzip2", asChar = FALSE)
+  cache_data_con <- file(open="w+b")
+  writeBin(cache_data_uncompressed, cache_data_con)
+  cache_data <- readRDS(cache_data_con)
+
   if(useCache) {
-    return(cache)
+    return(cache_data)
   }
 
   tryCatch(
@@ -21,7 +32,7 @@ load_rde_var <- function(useCache = FALSE,
       loadFcnSub <- substitute(loadFcn)
       loadFcnResult <- eval(loadFcnSub, environment())
 
-      if(!isTRUE(all.equal(cache, loadFcnResult))) {
+      if(!isTRUE(all.equal(cache_data, loadFcnResult))) {
         warning("Cached data is different from loaded data")
       }
 
@@ -33,9 +44,47 @@ load_rde_var <- function(useCache = FALSE,
         e,
         sep = "\n"
       ))
-      return(cache)
+      return(cache_data)
     }
   )
+}
+
+base64_decode <- function(txt) {
+  b64 <- c(LETTERS, letters, 0:9, "+", "/")
+  padding <- "="
+
+  ss <- strsplit(txt, "")[[1]]
+  chunks <- paste0(ss[c(TRUE, FALSE, FALSE, FALSE)],
+                   ss[c(FALSE, TRUE, FALSE, FALSE)],
+                   ss[c(FALSE, FALSE, TRUE, FALSE)],
+                   ss[c(FALSE, FALSE, FALSE, TRUE)])
+  res <- do.call(c, lapply(chunks, function(ch) {
+    r <- integer(3)
+    if(substr(ch, 1, 1) != padding) {
+      c0 <- which(b64 == substr(ch, 1, 1)) - 1
+      r[1] <- bitwShiftL(c0, 2)
+    }
+    if(substr(ch, 2, 2) != padding) {
+      c1 <- which(b64 == substr(ch, 2, 2)) - 1
+      r[1] <- r[1] + bitwShiftR(c1, 4)
+      r[2] <- bitwShiftL(bitwAnd(c1, 0x0F), 4)
+    }
+    if(substr(ch, 3, 3) != padding) {
+      c2 <- which(b64 == substr(ch, 3, 3)) - 1
+      r[2] <- r[2] + bitwShiftR(c2, 2)
+      r[3] <- bitwShiftL(bitwAnd(c2, 0x03), 6)
+    }
+    if(substr(ch, 4, 4) != padding) {
+      c3 <- which(b64 == substr(ch, 4, 4)) - 1
+      r[3] <- r[3] + c3
+    }
+    return(c(
+      as.raw(r[1]),
+      as.raw(r[2]),
+      as.raw(r[3])
+    ))
+  }))
+  return(res)
 }
 
 

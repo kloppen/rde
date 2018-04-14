@@ -1,109 +1,65 @@
 context("load data")
 
-expanded_iris <- {
-  structure(list(Sepal.Length = c(5.1, 4.9, 4.7, 4.6, 5, 5.4, 4.6,
-                                  5, 4.4, 4.9, 5.4, 4.8, 4.8, 4.3, 5.8, 5.7, 5.4, 5.1, 5.7, 5.1,
-                                  5.4, 5.1, 4.6, 5.1, 4.8, 5, 5, 5.2, 5.2, 4.7, 4.8, 5.4, 5.2,
-                                  5.5, 4.9, 5, 5.5, 4.9, 4.4, 5.1, 5, 4.5, 4.4, 5, 5.1, 4.8, 5.1,
-                                  4.6, 5.3, 5, 7, 6.4, 6.9, 5.5, 6.5, 5.7, 6.3, 4.9, 6.6, 5.2,
-                                  5, 5.9, 6, 6.1, 5.6, 6.7, 5.6, 5.8, 6.2, 5.6, 5.9, 6.1, 6.3,
-                                  6.1, 6.4, 6.6, 6.8, 6.7, 6, 5.7, 5.5, 5.5, 5.8, 6, 5.4, 6, 6.7,
-                                  6.3, 5.6, 5.5, 5.5, 6.1, 5.8, 5, 5.6, 5.7, 5.7, 6.2, 5.1, 5.7,
-                                  6.3, 5.8, 7.1, 6.3, 6.5, 7.6, 4.9, 7.3, 6.7, 7.2, 6.5, 6.4, 6.8,
-                                  5.7, 5.8, 6.4, 6.5, 7.7, 7.7, 6, 6.9, 5.6, 7.7, 6.3, 6.7, 7.2,
-                                  6.2, 6.1, 6.4, 7.2, 7.4, 7.9, 6.4, 6.3, 6.1, 7.7, 6.3, 6.4, 6,
-                                  6.9, 6.7, 6.9, 5.8, 6.8, 6.7, 6.7, 6.3, 6.5, 6.2, 5.9),
-                 Sepal.Width = c(3.5,
-                                 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3, 3, 4,
-                                 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5,
-                                 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5,
-                                 2.3, 3.2, 3.5, 3.8, 3, 3.8, 3.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3,
-                                 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 2.9, 3.1, 3, 2.7,
-                                 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4,
-                                 2.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7,
-                                 3, 2.9, 2.9, 2.5, 2.8, 3.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5,
-                                 3.6, 3.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 2.2, 3.2, 2.8,
-                                 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6,
-                                 3, 3.4, 3.1, 3, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4,
-                                 3),
-                 Petal.Length = c(1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5,
-                                  1.4, 1.5, 1.5, 1.6, 1.4, 1.1, 1.2, 1.5, 1.3, 1.4, 1.7, 1.5, 1.7,
-                                  1.5, 1, 1.7, 1.9, 1.6, 1.6, 1.5, 1.4, 1.6, 1.6, 1.5, 1.5, 1.4,
-                                  1.5, 1.2, 1.3, 1.4, 1.3, 1.5, 1.3, 1.3, 1.3, 1.6, 1.9, 1.4, 1.6,
-                                  1.4, 1.5, 1.4, 4.7, 4.5, 4.9, 4, 4.6, 4.5, 4.7, 3.3, 4.6, 3.9,
-                                  3.5, 4.2, 4, 4.7, 3.6, 4.4, 4.5, 4.1, 4.5, 3.9, 4.8, 4, 4.9,
-                                  4.7, 4.3, 4.4, 4.8, 5, 4.5, 3.5, 3.8, 3.7, 3.9, 5.1, 4.5, 4.5,
-                                  4.7, 4.4, 4.1, 4, 4.4, 4.6, 4, 3.3, 4.2, 4.2, 4.2, 4.3, 3, 4.1,
-                                  6, 5.1, 5.9, 5.6, 5.8, 6.6, 4.5, 6.3, 5.8, 6.1, 5.1, 5.3, 5.5,
-                                  5, 5.1, 5.3, 5.5, 6.7, 6.9, 5, 5.7, 4.9, 6.7, 4.9, 5.7, 6, 4.8,
-                                  4.9, 5.6, 5.8, 6.1, 6.4, 5.6, 5.1, 5.6, 6.1, 5.6, 5.5, 4.8, 5.4,
-                                  5.6, 5.1, 5.1, 5.9, 5.7, 5.2, 5, 5.2, 5.4, 5.1),
-                 Petal.Width = c(0.2,
-                                 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1,
-                                 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4,
-                                 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2,
-                                 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2, 1.4, 1.5, 1.5,
-                                 1.3, 1.5, 1.3, 1.6, 1, 1.3, 1.4, 1, 1.5, 1, 1.4, 1.3, 1.4, 1.5,
-                                 1, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1,
-                                 1.1, 1, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2,
-                                 1, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3, 2.5, 1.9, 2.1, 1.8, 2.2, 2.1,
-                                 1.7, 1.8, 1.8, 2.5, 2, 1.9, 2.1, 2, 2.4, 2.3, 1.8, 2.2, 2.3,
-                                 1.5, 2.3, 2, 2, 1.8, 2.1, 1.8, 1.8, 1.8, 2.1, 1.6, 1.9, 2, 2.2,
-                                 1.5, 1.4, 2.3, 2.4, 1.8, 1.8, 2.1, 2.4, 2.3, 1.9, 2.3, 2.5, 2.3,
-                                 1.9, 2, 2.3, 1.8),
-                 Species = structure(c(1L, 1L, 1L, 1L, 1L,
-                                       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-                                       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-                                       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L,
-                                       2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,
-                                       2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,
-                                       2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 3L,
-                                       3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L,
-                                       3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L,
-                                       3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L,
-                                       3L),
-                                     .Label = c("setosa", "versicolor", "virginica"),
-                                     class = "factor")),
-            .Names = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"), row.names = c(NA, -150L),
-            class = "data.frame")
-}
+# the full iris dataset
+base64_iris <- "
+QlpoOTFBWSZTWTZfsaQABq9/7/////+AAQgAwARIwC/33YBAAAEwACAAJgggSABtbdAEuQgFUAbDJQkR
+IphTyYpp6j1DZE0AANqepoeU9R6T00EMnqEU/Ko0BoAANAGgAAAAA0AAkypSoNAABoAAADEBoADQyAcA
+wjCaYhgEAyAGEaZMmEYCGhwDCMJpiGAQDIAYRpkyYRgIafr2w7TkRcpkTPeHfvPD5jioioVC+O7ieTdO
+SnJboeX0RlfO6s8TpujlhLfmZiankmjZVQ8qVn8XkAr5bY4hALu4AQBineQCrdEt+YxCWevVinay1jD7
+5dVsASVppAtjAy7b9vPUCQGRoEkWGg7gV/aLjtSr9YlYEmhGITSEmLWkgDnQkKgUECzxBlGmV45VCclK
+szMik1VEDUtBKwrK4ZWFklkamptoFJFmKSRIasKxVhqCSiRGlFFViJaF0ooo5ihBYhWKBkVRHLFNRTQt
+VRTZSSGIEtDC2mVJssPdhnYN4LiM7Ox3VsHg8xYcCmyJhTYEAcb6qAUMiAjQ5gItMgQMGkIliAFpC5zW
+0kIDtbfz28f7lepDvjBV+RE6ySp1kR9henIzMzZqSoKU+dckpjbY5I5JPOgxNetkNDaFy5yZQVU3roo1
+KqLhQZYnkRwcSAzClMKKTodCClEPhJPJTioc4rDxOcrnDcyUQjtxwKNTlF2FDjJwQhJKKQWRWKZFzQWp
+ZwT0eDh4LYGhc1JoERCRQkloJGiVJNMriSZaldytxqEdINLhV0o5liRQaAWZBRhYFJUcrRKTtMudKEIA
+hJIUCFAQFDoTE+AftEY3VGaAZAq9Uncultg+PLBz2unWbCKFWwv3L6Qkv0xISWjsSwtLwuGEIgIcbrr5
+HEwpmBzCmIczJMEPUaCjsTppJZa5qoZq1OdykKSkNw4hQOw55WoriODHjMgPe6Dh6fBy8AUw9XFRXOKT
+JuXcbvVHDaMljXUYLMFd2zdKHkwDu8PR7/qen2cffjGDfF2zuPcco0E7NIqC7+/9RJP2Q4nV4p4E6ggm
+X+CF+q7MpngcKM8ksmYzzdo4iKUh9bqbqhRotpIA7BAdCSARt2pNgsKhNto6jrJilKSx6YOOIexC3A4S
+dh6/W4PXpV5yFvm5z5no9J5YcXkJCvCADdGl4uMn/i7kinChIGy/Y0g=
+"
 
-modified_iris_3 <- {
-  structure(list(Sepal.Length = c(50000.1, 4.9, 4.7),
-                 Sepal.Width = c(3.5, 3, 3.2),
-                 Petal.Length = c(1.4, 1.4, 1.3),
-                 Petal.Width = c(0.2, 0.2, 0.2),
-                 Species = structure(c(1L, 1L, 1L),
-                                     .Label = c("setosa", "versicolor", "virginica"),
-                                     class = "factor")),
-            .Names = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"),
-            row.names = c(NA, 3L),
-            class = "data.frame")
-}
+# the first three rows of iris, but with the first element changed
+# a <- iris
+# a$Sepal.Length[1] <- 5000
+base64_modified_iris_3 <- "
+QlpoOTFBWSZTWdsanVkABrD/7/////+AAQgAwARIwC/33YBAQAEwCCAAJgggSABtbdAEuR7Ai0AWnrpc
+JCSmqeTUaPSNBoemoDIADT0htE2UaNqBoeocaMmRhGIBhNBgE0GgZMmjJkMIDCU8pSqGmQAaDTI0NAYQ
+bQhiDQM1DQ0DVTR6QyZqGgDQ000NAAaADQaAGQwIkpJGJtRtJoYCYCGRgAAjCemgmCHe/fxhyuIi4piJ
+jzDznfS3DVRFQqF9ZzU59xspstwezwjK+50J1OM4cWEmOqqVeeSrNl6xuJYOPEgFsGFj2KpALr0CANqt
+lAK52Sx1NoSzXaNqtTNbbDi3tGFAJLWaQLlYG9qxYc15CQG20CSL7QbIXcE6D1qWK4SvxYiY4wFYN1UA
+7UUbQWhB5ao3RTFdcVQnEpVmZkUmqogaloJWFZXBlYWSWRqamzIFJFmKSRIasFYqwagkokRpRRVYiWhc
+lFFHGKHCIVigZFURxYpqKaFqqKbFJIYgSyGFsmpIVKZKJ6gYoNuJQxYpfUoW7EpIhILCCSChACI8dUBI
+DCAQiSygrBhQhAiiWRAB/QW+v2KiBy5n8+PDyYr5sOfSCr9SJ2UlTsoj1F42MrMuW1KFrb91FJjbY6J7
+6N1B2GvKyNDaFxccTFBVTPhRRqVUXBQZYnYjRwkBmFKYUUnIchBSiH0EnZTVQ3VYdTdrdM3EohHM1wFG
+pxRcwUNZNEISSikFkVimRcaCylnAnh0cHRbAaFxqTIERCRQkloJGiVJD3nXVcJJlqVxcmoRyQaXBVyUc
+ZYkUGgFmQUYWBSVHFaJScyZccmRjZJI0yDjaluA3uk3io8Ofc0956W93lO5yfbz/StLco7MHuul4q0X1
+4uW7giv7gIry+i/GLlyoERAjnRd2+5UVVB1FUjqqKhHnMxZ364rUYGfW9GZ87rnWiotG45FB33WhqXSZ
+MeM2wcvyFfSfOqASb7WJARWhBSIWoZINCp4Ui9DQkdBEMpxQQWEg9ejHhwZPzwozoQgXq/ZzPmabHIEa
+TkY2wXP88iJJyIanQ1Tz5yggmXlIX7rvRszQcUzUUyqmatezklrR/x3m70U4cKSAOT+iA0pIBGrUk2C6
+yibbR+DmKlrWpj44clPbhbQ0k7b2uTR7VKu7C3c3e48PE2Ukq4ijhiAHuIujuln/F3JFOFCQ2xqdWQ==
+"
 
 # The first three rows from iris, but with Sepal.Length doubled
-scaled_iris_3 <- {
-  structure(list(Sepal.Length = c(10.2, 9.8, 9.4),
-                 Sepal.Width = c(3.5, 3, 3.2),
-                 Petal.Length = c(1.4, 1.4, 1.3),
-                 Petal.Width = c(0.2, 0.2, 0.2),
-                 Species = structure(c(1L, 1L, 1L),
-                                     .Label = c("setosa", "versicolor", "virginica"),
-                                     class = "factor")),
-            .Names = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"),
-            row.names = c(NA, 3L),
-            class = "data.frame")
-}
+# a <- head(iris, 3)
+# a$Sepal.Length <- a$Sepal.Length * 2
+base64_scaled_iris_3 <- "
+QlpoOTFBWSZTWTV4+F0AAKT/5P//SAAcAQAAwARIwC/n3YBAAAAwACYFAbAA7ICUQSnim9DSNT0IBo9Q
+NoNMjUMaGhoAMhoAAAAAJFFNGjQAAAAAAA4wnkeSFSiwlSkbJUEW1CJvxwWLc1ON0BEpUlVDV+sy15EI
+LrSlYpAncITOjFVJ6FKJMEvSPhFEVxGNqYYEWkEzA1MAe+AQaiwHBcA0ZVj5hVFYxlx6blXc08N9uNa4
+quzoR5Yefiyy5h0ny5GAxw/AjCKcFEzMLdWosBZsS3KqwGw663Jo1tNPdCtaXlk5plveRmYSUTUDjbEW
+hpt75vb8REb2Treh2S8TPNw5Lyf/F3JFOFCQNXj4XQ==
+"
 
 test_that("cached data loaded as expected", {
-  b <- load_rde_var(TRUE, {iris}, expanded_iris)
+  b <- load_rde_var(TRUE, {iris}, base64_iris)
 
   expect_equal(length(b), 5)
   expect_true(all.equal(b, iris))
 })
 
 test_that("new data loaded as expected", {
-  b <- load_rde_var(FALSE, {iris}, expanded_iris)
+  b <- load_rde_var(FALSE, {iris}, base64_iris)
 
   expect_equal(length(b), 5)
   expect_true(all.equal(b, iris))
@@ -114,39 +70,40 @@ test_that("new data with multiple lines", {
     FALSE,
     {
       a <- head(iris, 3)
-      a$Sepal.Length <- a$Sepal.Length *2
+      a$Sepal.Length <- a$Sepal.Length * 2
       a
     },
-    scaled_iris_3
+    base64_scaled_iris_3
   )
 
   expect_equal(length(b), 5)
-  expect_true(all.equal(b, scaled_iris_3))
+  expect_true(all.equal(b$Sepal.Length, head(iris, 3)$Sepal.Length * 2))
+  expect_true(all.equal(b$Species, head(iris, 3)$Species))
 })
 
 test_that("difference between new data and cahced data causes warning", {
   expect_warning(
-    load_rde_var(FALSE, {iris}, modified_iris_3)
+    load_rde_var(FALSE, {iris}, base64_modified_iris_3)
   )
 })
 
 test_that("when there is a difference between new data and cached data, the new data is returned (cache=FALSE)", {
   suppressWarnings({
-    b <- load_rde_var(FALSE, {iris}, modified_iris_3)
+    b <- load_rde_var(FALSE, {iris}, base64_modified_iris_3)
   })
   expect_true(all.equal(b, iris))
 })
 
 test_that("when new data produces error, cached data is returned", {
-  b <- load_rde_var(FALSE, {stop("some error")}, expanded_iris)
+  b <- load_rde_var(FALSE, {stop("some error")}, base64_iris)
 
   expect_equal(length(b), 5)
-  expect_true(all.equal(b, expanded_iris))
+  expect_true(all.equal(b, iris))
 })
 
 test_that("when new data produces error, message is raised", {
   expect_message(
-    load_rde_var(FALSE, {stop("some error")}, expanded_iris),
+    load_rde_var(FALSE, {stop("some error")}, base64_iris),
     "Error raised when loading new data"
   )
 })
@@ -160,11 +117,12 @@ test_that("data load code can access variables from the calling environment", {
       a$Sepal.Length <- a$Sepal.Length * mult
       a
     },
-    scaled_iris_3
+    base64_scaled_iris_3
   )
 
   expect_equal(length(b), 5)
-  expect_true(all.equal(b, scaled_iris_3))
+  expect_true(all.equal(b$Sepal.Length, head(iris, 3)$Sepal.Length * 2))
+  expect_true(all.equal(b$Species, head(iris, 3)$Species))
 })
 
 test_that("expressions in load code don't affect enclosing environment variables", {
@@ -178,10 +136,11 @@ test_that("expressions in load code don't affect enclosing environment variables
       expect_equal(mult, 2)
       a
     },
-    scaled_iris_3
+    base64_scaled_iris_3
   )
 
   expect_equal(mult, 1)
   expect_equal(length(b), 5)
-  expect_true(all.equal(b, scaled_iris_3))
+  expect_true(all.equal(b$Sepal.Length, head(iris, 3)$Sepal.Length * 2))
+  expect_true(all.equal(b$Species, head(iris, 3)$Species))
 })
