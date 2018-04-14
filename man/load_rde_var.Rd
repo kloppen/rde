@@ -4,17 +4,17 @@
 \alias{load_rde_var}
 \title{Title}
 \usage{
-load_rde_var(useCache = FALSE, loadFcn, cache)
+load_rde_var(use.cache = FALSE, load.fcn, cache)
 }
 \arguments{
-\item{useCache}{boolean to force the use of cached data}
+\item{use.cache}{boolean to force the use of cached data}
 
-\item{loadFcn}{code to load the data from its original source}
+\item{load.fcn}{code to load the data from its original source}
 
 \item{cache}{code that acts as a cache for the data}
 }
 \value{
-The data, either loaded using loadFcn, if possible, or from cache if that fails.
+The data, either loaded using load.fcn, if possible, or from cache if that fails.
 }
 \description{
 Title

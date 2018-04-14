@@ -2,32 +2,31 @@
 
 #' Title
 #'
-#' @param useCache boolean to force the use of cached data
-#' @param loadFcn code to load the data from its original source
+#' @param use.cache boolean to force the use of cached data
+#' @param load.fcn code to load the data from its original source
 #' @param cache code that acts as a cache for the data
 #'
-#' @return The data, either loaded using loadFcn, if possible, or from cache if that fails.
+#' @return The data, either loaded using load.fcn, if possible, or from cache if that fails.
 #' @export
 #'
-load_rde_var <- function(useCache = FALSE,
-                         loadFcn,
+load_rde_var <- function(use.cache = FALSE,
+                         load.fcn,
                          cache) {
   cache_data <- decode_cache(cache)
 
-  if(useCache) {
+  if (use.cache) {
     return(cache_data)
   }
 
-  tryCatch(
-    {
-      loadFcnSub <- substitute(loadFcn)
-      loadFcnResult <- eval(loadFcnSub, environment())
+  tryCatch({
+      load_fcn_sub <- substitute(load.fcn)
+      load_fcn_result <- eval(load_fcn_sub, environment())
 
-      if(!isTRUE(all.equal(cache_data, loadFcnResult))) {
+      if (!isTRUE(all.equal(cache_data, load_fcn_result))) {
         warning("Cached data is different from loaded data")
       }
 
-      return(loadFcnResult)
+      return(load_fcn_result)
     },
     error = function(e) {
       message(paste(
@@ -55,13 +54,14 @@ decode_cache <- function(cache) {
   if (grepl("^rde1", cache_no_whitespace)) {
     cache_no_whitespace <- gsub("^rde1", "", cache_no_whitespace)
     cache_data_compressed <- base64_decode(cache_no_whitespace)
-    cache_data_uncompressed <- memDecompress(cache_data_compressed, type = "bzip2", asChar = FALSE)
-    cache_data_con <- file(open="w+b")
+    cache_data_uncompressed <- memDecompress(cache_data_compressed,
+                                             type = "bzip2", asChar = FALSE)
+    cache_data_con <- file(open = "w+b")
     writeBin(cache_data_uncompressed, cache_data_con)
     cache_data <- readRDS(cache_data_con)
   } else {
-    stop("Unrecognized version number in cache text. Did the cache text come directly
-         from copy_rde_var()?")
+    stop("Unrecognized version number in cache text. Did the cache text come
+          directly from copy_rde_var()?")
   }
 
   return(cache_data)
@@ -78,21 +78,21 @@ base64_decode <- function(txt) {
                    ss[c(FALSE, FALSE, FALSE, TRUE)])
   res <- do.call(c, lapply(chunks, function(ch) {
     r <- integer(3)
-    if(substr(ch, 1, 1) != padding) {
+    if (substr(ch, 1, 1) != padding) {
       c0 <- which(b64 == substr(ch, 1, 1)) - 1
       r[1] <- bitwShiftL(c0, 2)
     }
-    if(substr(ch, 2, 2) != padding) {
+    if (substr(ch, 2, 2) != padding) {
       c1 <- which(b64 == substr(ch, 2, 2)) - 1
       r[1] <- r[1] + bitwShiftR(c1, 4)
       r[2] <- bitwShiftL(bitwAnd(c1, 0x0F), 4)
     }
-    if(substr(ch, 3, 3) != padding) {
+    if (substr(ch, 3, 3) != padding) {
       c2 <- which(b64 == substr(ch, 3, 3)) - 1
       r[2] <- r[2] + bitwShiftR(c2, 2)
       r[3] <- bitwShiftL(bitwAnd(c2, 0x03), 6)
     }
-    if(substr(ch, 4, 4) != padding) {
+    if (substr(ch, 4, 4) != padding) {
       c3 <- which(b64 == substr(ch, 4, 4)) - 1
       r[3] <- r[3] + c3
     }
@@ -104,5 +104,3 @@ base64_decode <- function(txt) {
   }))
   return(res)
 }
-
-

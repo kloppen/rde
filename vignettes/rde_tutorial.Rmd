@@ -58,13 +58,13 @@ If you want to include the data directly in the notebook, you can use `rde` to d
 
 `rde` provides two functions: `load_rde_var` and `copy_rde_var`. You'll use `load_rde_var` in your notebook, and you'll use `copy_rde_var` to create one of the arguments that `load_rde_var` needs.
 
-The function `load_rde_var` takes three arguments. The first argument is a boolean (we'll come back to this). The second argument is `loadFcn`. This is a piece of code that loads data from a source of your choosing (a CSV file, a database, etc.). This is the code that needs to work on your computer; it does not need to work on the computer of the notebook recipient. The third argument is `cache`. This argument is an encoded copy of the data.
+The function `load_rde_var` takes three arguments. The first argument is a boolean (we'll come back to this). The second argument is `load.fcn`. This is a piece of code that loads data from a source of your choosing (a CSV file, a database, etc.). This is the code that needs to work on your computer; it does not need to work on the computer of the notebook recipient. The third argument is `cache`. This argument is an encoded copy of the data.
 
-When you call `load_rde_var`, the function will first try to load the data using the code in the `loadFcn` argument. If this fails, it will fall back on using the `cache`. In the latter case, it will give you a message to say that it used the cache instead of loading new data. This is what the recipient of your notebook would see if you neglected to send them the data file.
+When you call `load_rde_var`, the function will first try to load the data using the code in the `load.fcn` argument. If this fails, it will fall back on using the `cache`. In the latter case, it will give you a message to say that it used the cache instead of loading new data. This is what the recipient of your notebook would see if you neglected to send them the data file.
 
-If `load_rde_var` succeeds in loading the data using the code in `loadFcn`, it will then compare this data with the data in `cache`. If there's a difference, it will give you a warning. If you expected the data to change, you can go ahead and update the third argument (again using `copy_rde_var`); if you didn't expect the data to change, well, now you know that it did change.
+If `load_rde_var` succeeds in loading the data using the code in `load.fcn`, it will then compare this data with the data in `cache`. If there's a difference, it will give you a warning. If you expected the data to change, you can go ahead and update the third argument (again using `copy_rde_var`); if you didn't expect the data to change, well, now you know that it did change.
 
-Now we'll come back to that first argument of `load_rde_var`. This argument is a boolean called `useCache`. This allows you to force `load_rde_var` to load data from the cache instead of running the code in `loadFcn`. Under most circumstances, this should be `FALSE`. However, sometimes, it may take a very long time to load your data from its original source (maybe the code executes a very long running database query, or scrapes a million webpages and just gives you a summary statistic). In the case that you don't want to wait around while you load the data from its original source again, you can set that first argument to `TRUE` and just use the cached data.
+Now we'll come back to that first argument of `load_rde_var`. This argument is a boolean called `use.cache`. This allows you to force `load_rde_var` to load data from the cache instead of running the code in `load.fcn`. Under most circumstances, this should be `FALSE`. However, sometimes, it may take a very long time to load your data from its original source (maybe the code executes a very long running database query, or scrapes a million webpages and just gives you a summary statistic). In the case that you don't want to wait around while you load the data from its original source again, you can set that first argument to `TRUE` and just use the cached data.
 
 Continuing on with our example of loading the populations of the ten most populous countries, we would start by wrapping our existing code inside the second argument of `load_rde_var`. It would now look the this:
 
@@ -72,8 +72,8 @@ Continuing on with our example of loading the populations of the ten most populo
 library(rde)
 
 pop.data <- load_rde_var(
-  useCache = FALSE,
-  loadFcn = {
+  use.cache = FALSE,
+  load.fcn = {
     read.csv(fname, stringsAsFactors = FALSE)
   },
   cache = {
@@ -82,7 +82,7 @@ pop.data <- load_rde_var(
 )
 ```
 
-If we run that code as is, it will raise a warning. We would expect this since there is nothing in the `cache` argument, so of course, the result of the `loadFcn` and `cache` are different. We'll need to fill in cache argument of `load_rde_var`.
+If we run that code as is, it will raise a warning. We would expect this since there is nothing in the `cache` argument, so of course, the result of the `load.fcn` and `cache` are different. We'll need to fill in cache argument of `load_rde_var`.
 
 You'd normally start by loading your data into memory as you normally would (the code above would work fine). Once the data `pop.data` is in memory, you're going to copy it into the `cache` argument of `load_rde_var`. You can use `copy_rde_var` to do so.
 
@@ -109,8 +109,8 @@ You can go ahead and paste that into the `cache` argument of `load_rde_var`. Mak
 library(rde)
 
 pop.data <- load_rde_var(
-  useCache = FALSE,
-  loadFcn = {
+  use.cache = FALSE,
+  load.fcn = {
     fname <- system.file("extdata", "country_pop.csv", package = "rde")
     read.csv(fname, stringsAsFactors = FALSE)
   },
@@ -125,11 +125,11 @@ pop.data <- load_rde_var(
 )
 ```
 
-Now, when we run this, it won't raise a warning because `loadFcn` and `cache` are the same.
+Now, when we run this, it won't raise a warning because `load.fcn` and `cache` are the same.
 
 If you send this notebook to someone else, but neglect to send the data file, they can now still play around with the data because it's now directly in the code. They will, however, get a message indicating that the data has been loaded from cache.
 
-What if you inadvertently change the data file? Or if you're reading the data from a database that changes? Well, if that happens, `loadFcn` and `cache` won't match. In this case, you'll get a warning. This can be useful: maybe you didn't expect the data to change, or maybe you need to update some of the text in your notebook --- maybe some of your conclusions or explanation needs to change. Assuming that the change in the data file (or database) isn't some sort of mistake, make sure that you update the value of the `cache` argument with the new data (again, you'll use the `copy_rde_var` function to do so).
+What if you inadvertently change the data file? Or if you're reading the data from a database that changes? Well, if that happens, `load.fcn` and `cache` won't match. In this case, you'll get a warning. This can be useful: maybe you didn't expect the data to change, or maybe you need to update some of the text in your notebook --- maybe some of your conclusions or explanation needs to change. Assuming that the change in the data file (or database) isn't some sort of mistake, make sure that you update the value of the `cache` argument with the new data (again, you'll use the `copy_rde_var` function to do so).
 
 # Installing on X11 Systems
 If you're on an X11 system (like Linux), you'll need to install some additional software. You should not have to do this on Windows or Mac. On X11 systems, you'll need to install either `xsel` or `xclip`. Depending on the distribution that you use, you will probably install it using a command like `sudo apt-get install xsel`

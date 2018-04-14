@@ -20,8 +20,8 @@ XOKTJuXcbvVHDaMljXUYLMFd2zdKHkwDu8PR7/qen2cffjGDfF2zuPcco0E7NIqC7+/9RJP2Q4nV4p4E
 "
 
 # the first three rows of iris, but with the first element changed
-# a <- iris
-# a$Sepal.Length[1] <- 5000
+# a <- iris  # nolint
+# a$Sepal.Length[1] <- 5000  # nolint
 base64_modified_iris_3 <- "
 rde1QlpoOTFBWSZTWdsanVkABrD/7/////+AAQgAwARIwC/33YBAQAEwCCAAJgggSABtbdAEuR7Ai0AW
 nrpcJCSmqeTUaPSNBoemoDIADT0htE2UaNqBoeocaMmRhGIBhNBgE0GgZMmjJkMIDCU8pSqGmQAaDTI0
@@ -42,8 +42,8 @@ WQ==
 "
 
 # The first three rows from iris, but with Sepal.Length doubled
-# a <- head(iris, 3)
-# a$Sepal.Length <- a$Sepal.Length * 2
+# a <- head(iris, 3)  # nolint
+# a$Sepal.Length <- a$Sepal.Length * 2  # nolint
 base64_scaled_iris_3 <- "
 rde1QlpoOTFBWSZTWTV4+F0AAKT/5P//SAAcAQAAwARIwC/n3YBAAAAwACYFAbAA7ICUQSnim9DSNT0I
 Bo9QNoNMjUMaGhoAMhoAAAAAJFFNGjQAAAAAAA4wnkeSFSiwlSkbJUEW1CJvxwWLc1ON0BEpUlVDV+sy
@@ -53,14 +53,14 @@ jbEWhpt75vb8REb2Treh2S8TPNw5Lyf/F3JFOFCQNXj4XQ==
 "
 
 test_that("cached data loaded as expected", {
-  b <- load_rde_var(TRUE, {iris}, base64_iris)
+  b <- load_rde_var(TRUE, iris, base64_iris)
 
   expect_equal(length(b), 5)
   expect_true(all.equal(b, iris))
 })
 
 test_that("new data loaded as expected", {
-  b <- load_rde_var(FALSE, {iris}, base64_iris)
+  b <- load_rde_var(FALSE, iris, base64_iris)
 
   expect_equal(length(b), 5)
   expect_true(all.equal(b, iris))
@@ -68,8 +68,7 @@ test_that("new data loaded as expected", {
 
 test_that("new data with multiple lines", {
   b <- load_rde_var(
-    FALSE,
-    {
+    FALSE, {
       a <- head(iris, 3)
       a$Sepal.Length <- a$Sepal.Length * 2
       a
@@ -84,19 +83,19 @@ test_that("new data with multiple lines", {
 
 test_that("difference between new data and cahced data causes warning", {
   expect_warning(
-    load_rde_var(FALSE, {iris}, base64_modified_iris_3)
+    load_rde_var(FALSE, iris, base64_modified_iris_3)
   )
 })
 
-test_that("when there is a difference between new data and cached data, the new data is returned (cache=FALSE)", {
+test_that("when new/cahce data differ, the new data is returned", {
   suppressWarnings({
-    b <- load_rde_var(FALSE, {iris}, base64_modified_iris_3)
+    b <- load_rde_var(FALSE, iris, base64_modified_iris_3)
   })
   expect_true(all.equal(b, iris))
 })
 
 test_that("when new data produces error, cached data is returned", {
-  b <- load_rde_var(FALSE, {stop("some error")}, base64_iris)
+  b <- load_rde_var(FALSE, stop("some error"), base64_iris)
 
   expect_equal(length(b), 5)
   expect_true(all.equal(b, iris))
@@ -104,7 +103,7 @@ test_that("when new data produces error, cached data is returned", {
 
 test_that("when new data produces error, message is raised", {
   expect_message(
-    load_rde_var(FALSE, {stop("some error")}, base64_iris),
+    load_rde_var(FALSE, stop("some error"), base64_iris),
     "Error raised when loading new data"
   )
 })
@@ -112,8 +111,7 @@ test_that("when new data produces error, message is raised", {
 test_that("data load code can access variables from the calling environment", {
   mult <- 2
   b <- load_rde_var(
-    FALSE,
-    {
+    FALSE, {
       a <- head(iris, 3)
       a$Sepal.Length <- a$Sepal.Length * mult
       a
@@ -126,11 +124,10 @@ test_that("data load code can access variables from the calling environment", {
   expect_true(all.equal(b$Species, head(iris, 3)$Species))
 })
 
-test_that("expressions in load code don't affect enclosing environment variables", {
+test_that("expressions in load code don't affect enclosing environment", {
   mult <- 1
   b <- load_rde_var(
-    FALSE,
-    {
+    FALSE, {
       mult <- mult * 2
       a <- head(iris, 3)
       a$Sepal.Length <- a$Sepal.Length * mult
