@@ -50,9 +50,9 @@ base64_encode <- function(bin_data) {
   b64data <- character(0)
 
   for (i in 1:ceiling(length(bin_data) / 3)) {
-    r0 <- if ((i - 1) * 3 + 0 <= length(bin_data)) bin_data[(i - 1) * 3 + 1] else 0L
-    r1 <- if ((i - 1) * 3 + 1 <= length(bin_data)) bin_data[(i - 1) * 3 + 2] else 0L
-    r2 <- if ((i - 1) * 3 + 2 <= length(bin_data)) bin_data[(i - 1) * 3 + 3] else 0L
+    r0 <- if ((i - 1) * 3 + 0 < length(bin_data)) bin_data[(i - 1) * 3 + 1] else raw(0)
+    r1 <- if ((i - 1) * 3 + 1 < length(bin_data)) bin_data[(i - 1) * 3 + 2] else raw(0)
+    r2 <- if ((i - 1) * 3 + 2 < length(bin_data)) bin_data[(i - 1) * 3 + 3] else raw(0)
     if(length(r0) == 0 && length(r1) == 0 && length(r2) == 0) {
       break()  # should never get here
     }
