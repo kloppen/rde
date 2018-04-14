@@ -16,7 +16,8 @@ hJIUCFAQFDoTE+AftEY3VGaAZAq9Uncultg+PLBz2unWbCKFWwv3L6Qkv0xISWjsSwtLwuGEIgIcbrr5
 HEwpmBzCmIczJMEPUaCjsTppJZa5qoZq1OdykKSkNw4hQOw55WoriODHjMgPe6Dh6fBy8AUw9XFRXOKT
 JuXcbvVHDaMljXUYLMFd2zdKHkwDu8PR7/qen2cffjGDfF2zuPcco0E7NIqC7+/9RJP2Q4nV4p4E6ggm
 X+CF+q7MpngcKM8ksmYzzdo4iKUh9bqbqhRotpIA7BAdCSARt2pNgsKhNto6jrJilKSx6YOOIexC3A4S
-dh6/W4PXpV5yFvm5z5no9J5YcXkJCvCADdGl4uMn/i7kinChIGy/Y0gA"
+dh6/W4PXpV5yFvm5z5no9J5YcXkJCvCADdGl4uMn/i7kinChIGy/Y0g=
+"
 
 # the first three rows of iris, but with the first element changed
 # a <- iris
@@ -36,7 +37,7 @@ ZYkUGgFmQUYWBSVHFaJScyZccmRjZJI0yDjaluA3uk3io8Ofc0956W93lO5yfbz/StLco7MHuul4q0X1
 4uW7giv7gIry+i/GLlyoERAjnRd2+5UVVB1FUjqqKhHnMxZ364rUYGfW9GZ87rnWiotG45FB33WhqXSZ
 MeM2wcvyFfSfOqASb7WJARWhBSIWoZINCp4Ui9DQkdBEMpxQQWEg9ejHhwZPzwozoQgXq/ZzPmabHIEa
 TkY2wXP88iJJyIanQ1Tz5yggmXlIX7rvRszQcUzUUyqmatezklrR/x3m70U4cKSAOT+iA0pIBGrUk2C6
-yibbR+DmKlrWpj44clPbhbQ0k7b2uTR7VKu7C3c3e48PE2Ukq4ijhiAHuIujuln/F3JFOFCQ2xqdWQAA
+yibbR+DmKlrWpj44clPbhbQ0k7b2uTR7VKu7C3c3e48PE2Ukq4ijhiAHuIujuln/F3JFOFCQ2xqdWQ==
 "
 
 # The first three rows from iris, but with Sepal.Length doubled
@@ -47,7 +48,8 @@ QlpoOTFBWSZTWTV4+F0AAKT/5P//SAAcAQAAwARIwC/n3YBAAAAwACYFAbAA7ICUQSnim9DSNT0IBo9Q
 NoNMjUMaGhoAMhoAAAAAJFFNGjQAAAAAAA4wnkeSFSiwlSkbJUEW1CJvxwWLc1ON0BEpUlVDV+sy15EI
 LrSlYpAncITOjFVJ6FKJMEvSPhFEVxGNqYYEWkEzA1MAe+AQaiwHBcA0ZVj5hVFYxlx6blXc08N9uNa4
 quzoR5Yefiyy5h0ny5GAxw/AjCKcFEzMLdWosBZsS3KqwGw663Jo1tNPdCtaXlk5plveRmYSUTUDjbEW
-hpt75vb8REb2Treh2S8TPNw5Lyf/F3JFOFCQNXj4XQAA"
+hpt75vb8REb2Treh2S8TPNw5Lyf/F3JFOFCQNXj4XQ==
+"
 
 test_that("cached data loaded as expected", {
   b <- load_rde_var(TRUE, {iris}, base64_iris)
