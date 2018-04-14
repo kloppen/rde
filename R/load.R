@@ -41,6 +41,11 @@ load_rde_var <- function(useCache = FALSE,
 }
 
 decode_cache <- function(cache) {
+  if (typeof(cache) != "character" || length(cache) == 0) {
+    message("Cache is empty or not a string")
+    return(NULL)
+  }
+
   on.exit({
     close(cache_data_con)
   })
