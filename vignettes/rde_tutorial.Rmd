@@ -32,7 +32,7 @@ knitr::opts_chunk$set(
 
 When sharing R Notebooks with others, it's not uncommon for the notebook to reference data that is only available on your machine. It could be that the recipient does not have access to a certain database, or it could be as simple as you forgetting to email them a CSV file with the data. In either of these cases, the analysis in the notebook is not self-contained. The package `rde` solves this problem by allowing you to embed the data directly in the notebook.
 
-If you're running on an X11 system (ie. Linux, or similar), please read the section on configuring the clipboard below before proceeding.
+If you're running on an X11 system (i.e. Linux, or similar), please read the section on configuring the clipboard below before proceeding.
 
 Let's take an example. Let's say that we have a spreadsheet of populations of the ten most populous countries (data originally taken from [@popclock]). Somewhere near the top of our R Notebook, we have a code chunk that looks like the following:
 

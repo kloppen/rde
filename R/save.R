@@ -4,7 +4,7 @@
 #'
 #' @param var the variable that you want to copy
 #' @param line.width adds a new line every line.width characters (-1 for no
-#' linebreaks)
+#' line breaks)
 #' @param no.clipboard the default is FALSE. Indicates that you want the
 #' function to return the string that would have been copied to the clipboard
 #' without actually copying to the clipboard. This option is mainly used

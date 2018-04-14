@@ -11,7 +11,7 @@ copy_rde_var(var, line.width = 80L, no.clipboard = FALSE,
 \item{var}{the variable that you want to copy}
 
 \item{line.width}{adds a new line every line.width characters (-1 for no
-linebreaks)}
+line breaks)}
 
 \item{no.clipboard}{the default is FALSE. Indicates that you want the
 function to return the string that would have been copied to the clipboard

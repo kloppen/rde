@@ -28,7 +28,7 @@ the use of the cached data by setting \code{use.cache = TRUE}.
 \details{
 This package is intended for small datasets. A copy of the data is encoded
 as a string (using base64 encoding, after compressing the data) and that
-string is coppied into your code. Even though the data is compressed, the
+string is copied into your code. Even though the data is compressed, the
 encoded string can still be quite long. If your data is more than a few
 hundred observations, this package probably isn't for you.
 
