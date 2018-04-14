@@ -30,11 +30,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-When sharing R Notebooks with others, it's not uncommon for the notebook to reference data that is only available on your machine. It could be that the recipient does not have access to a certain database, or it could be as simple as you forgetting to email them a CSV file with the data. In either of these casese, the analysis in the notebook is not self-contained. The package `rde` solves this problem by allowing you to embed the data direclty in the notebook.
+When sharing R Notebooks with others, it's not uncommon for the notebook to reference data that is only available on your machine. It could be that the recipient does not have access to a certain database, or it could be as simple as you forgetting to email them a CSV file with the data. In either of these cases, the analysis in the notebook is not self-contained. The package `rde` solves this problem by allowing you to embed the data directly in the notebook.
 
 If you're running on an X11 system (ie. Linux, or similar), please read the section on configuring the clipboard below before proceeding.
 
-Let's take an example. Let's say that we have a spreadsheet of populations of the ten most populus countries (data originally taken from [@popclock]). Somewhere near the top of our R Notebook, we have a code chunk that looks like the following:
+Let's take an example. Let's say that we have a spreadsheet of populations of the ten most populous countries (data originally taken from [@popclock]). Somewhere near the top of our R Notebook, we have a code chunk that looks like the following:
 
 ```{r include=FALSE}
 fname <- system.file("extdata", "country_pop.csv", package = "rde")
@@ -60,11 +60,11 @@ If you want to include the data directly in the notebook, you can use `rde` to d
 
 The function `load_rde_var` takes three arguments. The first argument is a boolean (we'll come back to this). The second argument is `loadFcn`. This is a piece of code that loads data from a source of your choosing (a CSV file, a database, etc.). This is the code that needs to work on your computer; it does not need to work on the computer of the notebook recipient. The third argument is `cache`. This argument is an encoded copy of the data.
 
-When you call `load_rde_var`, the function will first try to load the data using the code in the `loadFcn` argument. If this fails, it will fall back on using the `cache`. In the latter case, it will give you a message to say that it used the cache instead of loading new data. This is what the recipent of your notebook would see if you neglected to send them the data file.
+When you call `load_rde_var`, the function will first try to load the data using the code in the `loadFcn` argument. If this fails, it will fall back on using the `cache`. In the latter case, it will give you a message to say that it used the cache instead of loading new data. This is what the recipient of your notebook would see if you neglected to send them the data file.
 
 If `load_rde_var` succeeds in loading the data using the code in `loadFcn`, it will then compare this data with the data in `cache`. If there's a difference, it will give you a warning. If you expected the data to change, you can go ahead and update the third argument (again using `copy_rde_var`); if you didn't expect the data to change, well, now you know that it did change.
 
-Now we'll come back to that first argument of `load_rde_var`. This argument is a boolean called `useCache`. This allows you to force `load_rde_var` to load data from the cache instead of running the code in `loadFcn`. Under most circumstances, this should be `FALSE`. However, sometimes, it may take a very long time to load your data from its original source (maybe the code executes a very long running database query, or scrapes a million webpages and just gives you a summary statistic). In the case that you don't want to wait around while you load the data from its original source again, you can set that first argument to `TRUE` and just use the cahced data.
+Now we'll come back to that first argument of `load_rde_var`. This argument is a boolean called `useCache`. This allows you to force `load_rde_var` to load data from the cache instead of running the code in `loadFcn`. Under most circumstances, this should be `FALSE`. However, sometimes, it may take a very long time to load your data from its original source (maybe the code executes a very long running database query, or scrapes a million webpages and just gives you a summary statistic). In the case that you don't want to wait around while you load the data from its original source again, you can set that first argument to `TRUE` and just use the cached data.
 
 Continuing on with our example of loading the populations of the ten most populous countries, we would start by wrapping our existing code inside the second argument of `load_rde_var`. It would now look the this:
 
