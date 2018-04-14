@@ -1,9 +1,14 @@
 
 
-#' Title
+#' Encode, compress and copy data into the clipboard
 #'
-#' @param var the variable that you want to copy
-#' @param line.width adds a new line every line.width characters (-1 for no
+#' @description
+#' \code{copy_rde_var} is intended to work with \code{\link{load_rde_var}}.
+#' The normal workflow would use \code{copy_rde_var} to copy a variable to
+#' the clipboard and then paste it in to the third argument of \code{load_rde_var}.
+#'
+#' @param var the variable to copy
+#' @param line.width the desired width of lines of text (-1 for no
 #' line breaks)
 #' @param no.clipboard the default is FALSE. Indicates that you want the
 #' function to return the string that would have been copied to the clipboard
@@ -14,8 +19,20 @@
 #' very large data, you might need to increase this.
 #'
 #' @return None (or string if no.clipboard=TRUE)
-#' @export
 #'
+#' @details
+#'
+#' The variable in the argument \code{var} is first saved using
+#' \code{\link{saveRDS}}. Then the saved variable is compressed using
+#' bzip2 compression. Next, the compressed data is base 64 encoded into
+#' a character string. Next, that string is prepended with a code that
+#' indicates the version of this package. The prepended code (currently
+#' `rde1` allows for future changes while providing backwards compatibility).
+#' Finally, the string is optionally broken up into lines of width
+#' \code{line.width}. Whitespace and line breaks are ignored by
+#' \code{\link{load_rde_var}}.
+#'
+#' @export
 #' @importFrom clipr write_clip
 #'
 copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE,
