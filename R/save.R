@@ -30,6 +30,8 @@ copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE, max_size=80000
 
   txt <- base64_encode(bin_data)
 
+  txt <- paste0("rde1", txt)
+
   if (line.width > 0) {
     txt <- gsub(
       paste0("(.{", line.width, "})")

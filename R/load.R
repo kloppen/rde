@@ -12,16 +12,7 @@
 load_rde_var <- function(useCache = FALSE,
                          loadFcn,
                          cache) {
-  on.exit({
-    close(cache_data_con)
-  })
-
-  cache_no_whitespace <- gsub("[[:space:]]", "", cache)
-  cache_data_compressed <- base64_decode(cache_no_whitespace)
-  cache_data_uncompressed <- memDecompress(cache_data_compressed, type = "bzip2", asChar = FALSE)
-  cache_data_con <- file(open="w+b")
-  writeBin(cache_data_uncompressed, cache_data_con)
-  cache_data <- readRDS(cache_data_con)
+  cache_data <- decode_cache(cache)
 
   if(useCache) {
     return(cache_data)
@@ -47,6 +38,28 @@ load_rde_var <- function(useCache = FALSE,
       return(cache_data)
     }
   )
+}
+
+decode_cache <- function(cache) {
+  on.exit({
+    close(cache_data_con)
+  })
+
+  cache_no_whitespace <- gsub("[[:space:]]", "", cache)
+
+  if (grepl("^rde1", cache_no_whitespace)) {
+    cache_no_whitespace <- gsub("^rde1", "", cache_no_whitespace)
+    cache_data_compressed <- base64_decode(cache_no_whitespace)
+    cache_data_uncompressed <- memDecompress(cache_data_compressed, type = "bzip2", asChar = FALSE)
+    cache_data_con <- file(open="w+b")
+    writeBin(cache_data_uncompressed, cache_data_con)
+    cache_data <- readRDS(cache_data_con)
+  } else {
+    stop("Unrecognized version number in cache text. Did the cache text come directly
+         from copy_rde_var()?")
+  }
+
+  return(cache_data)
 }
 
 base64_decode <- function(txt) {
