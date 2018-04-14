@@ -1,14 +1,66 @@
 
 
-#' Title
+#' Load data in a reproducible way that allows for exchange of code
+#'
+#' @description
+#' \code{load_rde_var} attempts to execute the code in \code{load.fcn}. If
+#' that succeeds, then the return value of that code is returned by
+#' \code{load_rde_var}. Otherwise, the value stored in \code{cache} is
+#' returned. \code{cache} must contain an encoded copy of the value produced
+#' by the function \code{\link{copy_rde_var}}. Optionally, you can force
+#' the use of the cached data by setting \code{use.cache = TRUE}.
 #'
 #' @param use.cache boolean to force the use of cached data
 #' @param load.fcn code to load the data from its original source
-#' @param cache code that acts as a cache for the data
+#' @param cache a cached copy of the data
 #'
-#' @return The data, either loaded using load.fcn, if possible, or from cache if that fails.
+#'
+#' @return The data, either loaded using load.fcn, if possible, or from cache
+#' if that fails.
+#'
+#' @details
+#' This package is intended for small datasets. A copy of the data is encoded
+#' as a string (using base64 encoding, after compressing the data) and that
+#' string is coppied into your code. Even though the data is compressed, the
+#' encoded string can still be quite long. If your data is more than a few
+#' hundred observations, this package probably isn't for you.
+#'
+#' \code{load.fcn} must contain executable R code. Unless that code is a
+#' single expression, normally it would be enclosed in a pair of braces.
+#'
+#' \code{cache} must be a string that was originally produced by
+#' \code{\link{copy_rde_var}}. See the documentation for that function for
+#' more details about the format of this string.
+#'
+#' If the code in \code{load.fcn} fails, then a message is produced to
+#' indicate that the failure and the data encoded in \code{cache} is returned
+#' instead. This would occur if you share you code with someone who does
+#' not have access to the data that you're loading in your code.
+#'
+#' If \code{use.cache = TRUE}, the code in \code{load.fcn} is ignored and
+#' the data is loaded from the encoded string \code{cache}. This can be useful
+#' if it takes a very long time obtain the data and you re-run your code
+#' often.
+#'
+#' If the value produced by the code in \code{load.fcn} does not match the
+#' value encoded in \code{cache}, then a warning is produced to indicate
+#' that there is a mismatch.
+#'
+#' @examples
+#' load_rde_var(use.cache = FALSE, {
+#'     head(iris, 3)
+#'   }, "
+#'   rde1QlpoOTFBWSZTWbGO254AAKT/5P//XAAAAQAAwARIwC/n3YBAAAAwACYFAbAA7IhKIm
+#'   lPaU3oaRqekyaDTQNPJP1MhDAaA0AAGmg0A0AaBIokNGgAAAAAANMYUzuJyxRYUJWNnsC1
+#'   tgiccpLFvZTHhARK1KFQ1z25bNBCC+0pWKgEnGEzpxVaihSiTBL2j6RRFchjamGBFpBMwN
+#'   bAHwgEGosCEGYBoztHPFUVjGcDz3qu9p4cb8rVyVfHmR5S3bWXfDDnTnyJDJh0iMIpionY
+#'   lfq1FwK/IvzsuBsOmuZNGtpp7oWrW4upNNGDiL2E9T6iY2RFqabO9/r9oiN6p/YIdV1FPP
+#'   ISLqVP4u5IpwoSFjHbc8A=
+#'   ")
+#'
+#' @seealso \link{copy_rde_var}
+#'
 #' @export
-#'
 load_rde_var <- function(use.cache = FALSE,
                          load.fcn,
                          cache) {
