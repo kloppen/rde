@@ -35,4 +35,17 @@ indicates the version of this package. The prepended code (currently
 Finally, the string is optionally broken up into lines of width
 \code{line.width}. Whitespace and line breaks are ignored by
 \code{\link{load_rde_var}}.
+
+On X11 systems (e.g. Linux), external software is required in order to
+access the clipboard. Either `xsel` or `xclip` is required. Installation
+of this software will depend on the installation that you use, but on
+Ubuntu/Debian, `sudo apt-get install xsel` will probably work.
+
+On Windows and OSX, no additional software is required.
+}
+\examples{
+\dontrun{
+copy_rde_var(iris)
+}
+
 }
