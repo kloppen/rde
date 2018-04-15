@@ -1,9 +1,9 @@
 Package: rde
 Title: Reproducible Data Embedding
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: person("Stefan", "Kloppenborg", email = "stefan.kloppenborg@gmail.com", role = c("aut", "cre"))
 Description: Allows you to easily include (small) datasets directly in notebooks and R scripts that you share with others.
-Depends: R (>= 3.4.3)
+Depends: R (>= 3.1)
 Imports:
   clipr
 License: GPL-3
@@ -17,3 +17,8 @@ Suggests: testthat,
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Language: en-US
+SystemRequirements: xclip (https://github.com/astrand/xclip) or xsel
+    (http://www.vergenet.net/~conrad/software/xsel/) for accessing the X11
+    clipboard
+URL: https://github.com/kloppen/rde
+BugReports: https://github.com/kloppen/rde/issues
