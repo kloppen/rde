@@ -1,6 +1,6 @@
 Package: rde
 Title: Reproducible Data Embedding
-Version: 0.0.0.9001
+Version: 0.0.1
 Authors@R: person("Stefan", "Kloppenborg", email = "stefan.kloppenborg@gmail.com", role = c("aut", "cre"))
 Description: Allows you to easily include (small) datasets directly in notebooks and R scripts that you share with others.
 Depends: R (>= 3.4.3)
@@ -11,6 +11,9 @@ Encoding: UTF-8
 LazyData: true
 Suggests: testthat,
     knitr,
-    rmarkdown
+    lintr,
+    rmarkdown,
+    spelling
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
+Language: en-US
