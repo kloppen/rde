@@ -14,9 +14,6 @@
 #' function to return the string that would have been copied to the clipboard
 #' without actually copying to the clipboard. This option is mainly used
 #' for testing purposes. Normal users will not use it.
-#' @param max_size the maximum size of the object, before compression. In
-#' most cases, you should be able to keep the default of about 8 MB, but for
-#' very large data, you might need to increase this.
 #'
 #' @return None (or string if no.clipboard=TRUE)
 #'
@@ -35,15 +32,26 @@
 #' @export
 #' @importFrom clipr write_clip
 #'
-copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE,
-                         max_size=8000000L) {
+copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE) {
   on.exit({
     close(con)
   })
 
+  max_size <- 800000L
+
   con <- file(open = "w+b")
   saveRDS(var, file = con)
-  bin_data <- readBin(con = con, what = "raw", n = max_size)
+
+  bin_data <- raw(0)
+
+  repeat {
+    new_data <- readBin(con = con, what = "raw", n = max_size)
+    if (all(new_data == as.raw(0L))) {
+      break
+    }
+    bin_data <- c(bin_data, new_data)
+  }
+
   bin_data <- memCompress(bin_data, type = "bzip2")
 
   txt <- base64_encode(bin_data)

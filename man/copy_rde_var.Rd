@@ -4,8 +4,7 @@
 \alias{copy_rde_var}
 \title{Encode, compress and copy data into the clipboard}
 \usage{
-copy_rde_var(var, line.width = 80L, no.clipboard = FALSE,
-  max_size = 8000000L)
+copy_rde_var(var, line.width = 80L, no.clipboard = FALSE)
 }
 \arguments{
 \item{var}{the variable to copy}
@@ -17,10 +16,6 @@ line breaks)}
 function to return the string that would have been copied to the clipboard
 without actually copying to the clipboard. This option is mainly used
 for testing purposes. Normal users will not use it.}
-
-\item{max_size}{the maximum size of the object, before compression. In
-most cases, you should be able to keep the default of about 8 MB, but for
-very large data, you might need to increase this.}
 }
 \value{
 None (or string if no.clipboard=TRUE)
