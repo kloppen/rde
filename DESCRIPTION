@@ -1,6 +1,6 @@
 Package: rde
 Title: Reproducible Data Embedding
-Version: 0.0.1
+Version: 0.0.1.9001
 Authors@R: person("Stefan", "Kloppenborg", email = "stefan.kloppenborg@gmail.com", role = c("aut", "cre"))
 Description: Allows you to easily include (small) datasets directly in notebooks and R scripts that you share with others.
 Depends: R (>= 3.4.3)
