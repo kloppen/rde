@@ -30,11 +30,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-When sharing R Notebooks with others, it's not uncommon for the notebook to reference data that is only available on your machine. It could be that the recipient does not have access to a certain database, or it could be as simple as you forgetting to email them a CSV file with the data. In either of these cases, the analysis in the notebook is not self-contained. The package `rde` solves this problem by allowing you to embed the data directly in the notebook.
+When sharing R Notebooks with others, it's not uncommon for the notebook to 
+reference data that is only available on your machine. It could be that the 
+recipient does not have access to a certain database, or it could be as 
+simple as you forgetting to email them a CSV file with the data. In either 
+of these cases, the analysis in the notebook is not self-contained. The 
+package `rde` solves this problem by allowing you to embed the data directly 
+in the notebook.
 
-If you're running on an X11 system (i.e. Linux, or similar), please read the section on configuring the clipboard below before proceeding.
+If you're running on an X11 system (i.e. Linux, or similar), please read the 
+section on configuring the clipboard below before proceeding.
 
-Let's take an example. Let's say that we have a spreadsheet of populations of the ten most populous countries (data originally taken from [@popclock]). Somewhere near the top of our R Notebook, we have a code chunk that looks like the following:
+Let's take an example. Let's say that we have a csv files containing the 
+populations of the ten most populous countries (data originally taken from 
+[@popclock]). Somewhere near the top of our R Notebook, we have a code chunk 
+that looks like the following:
 
 ```{r include=FALSE}
 fname <- system.file("extdata", "country_pop.csv", package = "rde")
@@ -52,21 +62,51 @@ pop.data <- read.csv(fname, stringsAsFactors = FALSE)
 kable(pop.data)
 ```
 
-Now, if you send your notebook to someone else and don't send along the file `country_pop.csv`, that person can look at your notebook, but they won't be able to re-run it.
+Now, if you send your notebook to someone else and don't send along the file 
+`country_pop.csv`, that person can look at your notebook, but they won't be 
+able to re-run it.
 
-If you want to include the data directly in the notebook, you can use `rde` to do so.
+If you want to include the data directly in the notebook, you can use `rde` 
+to do so.
 
-`rde` provides two functions: `load_rde_var` and `copy_rde_var`. You'll use `load_rde_var` in your notebook, and you'll use `copy_rde_var` to create one of the arguments that `load_rde_var` needs.
+`rde` provides two functions: `load_rde_var` and `copy_rde_var`. You'll use 
+`load_rde_var` in your notebook, and you'll use `copy_rde_var` to create one 
+of the arguments that `load_rde_var` needs.
 
-The function `load_rde_var` takes three arguments. The first argument is a boolean (we'll come back to this). The second argument is `load.fcn`. This is a piece of code that loads data from a source of your choosing (a CSV file, a database, etc.). This is the code that needs to work on your computer; it does not need to work on the computer of the notebook recipient. The third argument is `cache`. This argument is an encoded copy of the data.
+The function `load_rde_var` takes three arguments. The first argument is a 
+boolean (we'll come back to this). The second argument is `load.fcn`. This 
+is a piece of code that loads data from a source of your choosing (a CSV 
+file, a database, etc.). This is the code that needs to work on your 
+computer; it does not need to work on the computer of the notebook recipient. 
+The third argument is `cache`. This argument is an encoded copy of the data.
 
-When you call `load_rde_var`, the function will first try to load the data using the code in the `load.fcn` argument. If this fails, it will fall back on using the `cache`. In the latter case, it will give you a message to say that it used the cache instead of loading new data. This is what the recipient of your notebook would see if you neglected to send them the data file.
+When you call `load_rde_var`, the function will first try to load the data 
+using the code in the `load.fcn` argument. If this fails, it will fall back 
+on using the `cache`. In the latter case, it will give you a message to say 
+that it used the cache instead of loading new data. This is what the 
+recipient of your notebook would see if you neglected to (or could not) 
+send them the data file.
 
-If `load_rde_var` succeeds in loading the data using the code in `load.fcn`, it will then compare this data with the data in `cache`. If there's a difference, it will give you a warning. If you expected the data to change, you can go ahead and update the third argument (again using `copy_rde_var`); if you didn't expect the data to change, well, now you know that it did change.
+If `load_rde_var` succeeds in loading the data using the code in `load.fcn`, 
+it will then compare this data with the data in `cache`. If there's a 
+difference, it will give you a warning. If you expected the data to change, 
+you can go ahead and update the third argument (we'll talk about how to do
+this soon); if you didn't expect the data to change, well, now you know that 
+it did change.
 
-Now we'll come back to that first argument of `load_rde_var`. This argument is a boolean called `use.cache`. This allows you to force `load_rde_var` to load data from the cache instead of running the code in `load.fcn`. Under most circumstances, this should be `FALSE`. However, sometimes, it may take a very long time to load your data from its original source (maybe the code executes a very long running database query, or scrapes a million webpages and just gives you a summary statistic). In the case that you don't want to wait around while you load the data from its original source again, you can set that first argument to `TRUE` and just use the cached data.
+Now we'll come back to that first argument of `load_rde_var`. This argument 
+is a boolean named `use.cache`. This allows you to force `load_rde_var` to 
+load data from the cache instead of running the code in `load.fcn`. Under 
+most circumstances, this should be `FALSE`. However, sometimes, it may take 
+a very long time to load your data from its original source (maybe the code 
+executes a very long running database query, or scrapes a million webpages 
+and just gives you a summary statistic). In the case that you don't want to 
+wait around while you load the data from its original source again, you can 
+set that first argument to `TRUE` and just use the cached data.
 
-Continuing on with our example of loading the populations of the ten most populous countries, we would start by wrapping our existing code inside the second argument of `load_rde_var`. It would now look the this:
+Continuing on with our example of loading the populations of the ten most 
+populous countries, we would start by wrapping our existing code inside the 
+second argument of `load_rde_var`. It would now look the this:
 
 ```{r}
 library(rde)
@@ -82,9 +122,14 @@ pop.data <- load_rde_var(
 )
 ```
 
-If we run that code as is, it will raise a warning. We would expect this since there is nothing in the `cache` argument, so of course, the result of the `load.fcn` and `cache` are different. We'll need to fill in cache argument of `load_rde_var`.
+If we run that code as is, it will raise a warning. We would expect this 
+since there is nothing in the `cache` argument, so of course, the result 
+of the `load.fcn` does not match the data in `cache`..
 
-You'd normally start by loading your data into memory as you normally would (the code above would work fine). Once the data `pop.data` is in memory, you're going to copy it into the `cache` argument of `load_rde_var`. You can use `copy_rde_var` to do so.
+You'd normally start by loading your data into memory as you normally would 
+(the code above would work fine). Once the data `pop.data` is in memory, 
+you're going to copy it into the `cache` argument of `load_rde_var`. You 
+can use `copy_rde_var` to do so.
 
 In the console, you would type:
 
@@ -92,7 +137,8 @@ In the console, you would type:
 copy_rde_var(pop.data)
 ```
 
-When you execute this, your clipboard will contain some R code that will recreate the variable. Your clipboard will look like this:
+When you execute this, your clipboard will contain an encoded version of the 
+variable. Your clipboard will look like this:
 
 ```
 rde1QlpoOTFBWSZTWQy+/kYAAIB3/v//6EJABRg/WlQv797wYkAAAMQiABBAACAAAZGwANk0RTKejU9T
@@ -103,7 +149,11 @@ VY8KAhHAhrG4RCeilM0rXKkdpjGqyNgJwAkmnPQOMYrLlQ4YTIv0WyxfYdkd9WSWUsvggC/i7kinChIB
 l9/IwA==
 ```
 
-You can go ahead and paste that into the `cache` argument of `load_rde_var`. Make sure that you paste it inside a pair of quotes. The code at the top of your notebook will now look like the following. Line breaks and spaces within the `cahce` argument don't matter, so don't worry about indenting to make your code pretty.
+You can go ahead and paste that into the `cache` argument of `load_rde_var`. 
+Make sure that you paste it inside a pair of quotes. The code at the top of 
+your notebook will now look like the following. Line breaks and spaces within 
+the `cahce` value don't matter, so go ahead and indent at will to suit your
+preferred code style.
 
 ```{r}
 library(rde)
@@ -125,15 +175,30 @@ pop.data <- load_rde_var(
 )
 ```
 
-Now, when we run this, it won't raise a warning because `load.fcn` and `cache` are the same.
+Now, when we run this, it won't raise a warning because `load.fcn` and `cache` 
+are the same.
 
-If you send this notebook to someone else, but neglect to send the data file, they can now still play around with the data because it's now directly in the code. They will, however, get a message indicating that the data has been loaded from cache.
+If you send this notebook to someone else, but neglect to send the data file, 
+they can now still play around with the data because it's now directly in the 
+code. They will, however, get a message indicating that the data has been 
+loaded from cache.
 
-What if you inadvertently change the data file? Or if you're reading the data from a database that changes? Well, if that happens, `load.fcn` and `cache` won't match. In this case, you'll get a warning. This can be useful: maybe you didn't expect the data to change, or maybe you need to update some of the text in your notebook --- maybe some of your conclusions or explanation needs to change. Assuming that the change in the data file (or database) isn't some sort of mistake, make sure that you update the value of the `cache` argument with the new data (again, you'll use the `copy_rde_var` function to do so).
+What if you inadvertently change the data file? Or if you're reading the data 
+from a database that changes? Well, if that happens, `load.fcn` and `cache` 
+will no longer match. In this case, you'll get a warning. This can be useful: 
+maybe you didn't expect the data to change, or maybe you need to update some 
+of the text in your notebook --- maybe some of your conclusions or 
+explanation needs to change. Assuming that the change in the data file (or 
+database) isn't some sort of mistake, make sure that you update the value of 
+the `cache` argument with the new data (again, you'll use the `copy_rde_var` 
+function to do so).
 
 # Installing on X11 Systems
-If you're on an X11 system (like Linux), you'll need to install some additional software. You should not have to do this on Windows or Mac. On X11 systems, you'll need to install either `xsel` or `xclip`. Depending on the distribution that you use, you will probably install it using a command like `sudo apt-get install xsel`
-
+If you're on an X11 system (like many Linux distributions), you'll need to 
+install some additional software. You should not have to do this on 
+Windows or Mac. On X11 systems, you'll need to install either `xsel` 
+or `xclip`. Depending on the distribution that you use, you will probably 
+install it using a command like `sudo apt-get install xsel`
 
 # References
 
