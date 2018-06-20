@@ -52,6 +52,16 @@ This package is not yet on CRAN.
 devtools::install_github("kloppen/rde")
 ```
 
+## Vignette
+For more information about how to use this package, please see the tutorial,
+which can be accessed by running one of the following R commands:
+
+```
+RShowDoc("rde_tutorial", package = "rde")
+# or, alternatively
+vignette("rde_tutorial")
+```
+
 ## Contributing
 Contributions to this package are welcome. Please feel free to discuss a
 feature that you think should be added in the Issues page on GitHub and
