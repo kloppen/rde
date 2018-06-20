@@ -79,7 +79,8 @@ copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE) {
   if (no.clipboard) {
     return(txt)
   }
-  clipr::write_clip(txt)
+  clipr::write_clip(txt, object_type = "character", breaks = NULL, eos = NULL,
+                    return_new = TRUE)
 }
 
 base64_encode <- function(bin_data) {
