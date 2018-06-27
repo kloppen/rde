@@ -1,4 +1,14 @@
 # rde 0.1.0
+## Addressed CRAN comments
+> Thanks, please elaborate your Description a bit. I'm not sure I understand
+> what you mean.
+
+The description field in the DESCRIPTION file has been updated.
+
+> Please replace \dontrun{} by \donttest{} in your Rd-files.
+
+Replaced `\dontrun{}` with `\donttest{}` in copy_rde_var.Rd
+
 ## Test environments
 - docker image: rocker/tidyverse:3.5.0 (R 3.5.0)
 - local Ubuntu 16.04 (R 3.4.4)

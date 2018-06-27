@@ -36,7 +36,7 @@
 #' On Windows and OSX, no additional software is required.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' copy_rde_var(iris)
 #' }
 #'
