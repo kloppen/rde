@@ -52,21 +52,28 @@ This package is not yet on CRAN.
 devtools::install_github("kloppen/rde")
 ```
 
+## Vignette
+For more information about how to use this package, please see the tutorial,
+which can be accessed by running one of the following R commands:
+
+```
+RShowDoc("rde_tutorial", package = "rde")
+# or, alternatively
+vignette("rde_tutorial")
+```
+
 ## Contributing
 Contributions to this package are welcome. Please feel free to discuss a
-feature that you think should be added in the Issues page on GitHub and
-to submit a pull request. 
+feature that you think should be added in the Issues page on GitHub. Feel
+free to submit a Pull Request too. If you submit code, please make sure
+that it is tested.
 
-## Bugs and Feature Requests
+## Bugs
 If you discover a bug in this package, please report it by creating an
 Issue on GitHub. Please include a 
 [reproducible example](https://www.tidyverse.org/help/) and also include
 information on which version of R you are running and which version of
 each applicable package you have installed.
-
-If you want a feature added, please create in Issue on GitHub and explain
-why the feature will be useful and why it should be added to this package
-(and not a different package).
 
 ## License
 This package is released under the

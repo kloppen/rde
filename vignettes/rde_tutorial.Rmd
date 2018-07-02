@@ -76,9 +76,7 @@ pop.data <- load_rde_var(
   load.fcn = {
     read.csv(fname, stringsAsFactors = FALSE)
   },
-  cache = {
-    # We'll fill this in shortly
-  }
+  cache = NULL  # We'll fill this in shortly
 )
 ```
 
