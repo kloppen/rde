@@ -6,7 +6,7 @@ R Notebook or other R code.
 ## Usage
 If you had a CSV file on your computer called `country_pop.csv` that you used
 in your analysis, you'd have to send it along with your code in order for the
-recipient to be able to re-run your analysis. However, with the `rde` pacakge,
+recipient to be able to re-run your analysis. However, with the `rde` package,
 you can embed the data directly in your code. The code with the embedded data
 would look like the following.
 
@@ -31,23 +31,25 @@ pop.data <- load_rde_var(
 ```
 
 When the code above is run, `load_rde_var` will first try to run the code in `load.fcn`.
-If this suceeds, then tha tdata is returned. Otherwise, it loads the data from the 
+If this succeeds, then that data is returned. Otherwise, it loads the data from the 
 encoded string given in the argument `cache`. If you send your code to someone else
 and don't send them the data files, when the run the code, they will be getting the
 data from the encoded version that is located directly in your code.
 
 The encoded version of the data is easily produced by the function `copy_rde_var`.
 
-Additionally, `load_rde_var` checks that the cahced value matches the result of
+Additionally, `load_rde_var` checks that the cached value matches the result of
 `load.fcn` and tells you if there is a difference.
 
 
 ## Installation
-This package is not yet on CRAN.
-
+Install from CRAN:
+```
+install.packages("rde")
 ```
 
-# Install the development version from GitHub
+Install the development version from GitHub:
+```
 # install.packages("devtools")
 devtools::install_github("kloppen/rde")
 ```
