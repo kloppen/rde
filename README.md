@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/kloppen/rde.svg?branch=master)](https://travis-ci.com/kloppen/rde)
+
 # Reproducible Data Exchange (rde)
 ## Overview
 This R package allows you to easily share (small) data sets directly in an 
