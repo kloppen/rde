@@ -70,7 +70,7 @@ test_that("new data with multiple lines", {
   b <- load_rde_var(
     FALSE, {
       a <- head(iris, 3)
-      a$Sepal.Length <- a$Sepal.Length * 2
+      a$Sepal.Length <- a$Sepal.Length * 2  #nolint
       a
     },
     base64_scaled_iris_3
@@ -113,7 +113,7 @@ test_that("data load code can access variables from the calling environment", {
   b <- load_rde_var(
     FALSE, {
       a <- head(iris, 3)
-      a$Sepal.Length <- a$Sepal.Length * mult
+      a$Sepal.Length <- a$Sepal.Length * mult  #nolint
       a
     },
     base64_scaled_iris_3
@@ -130,7 +130,7 @@ test_that("expressions in load code don't affect enclosing environment", {
     FALSE, {
       mult <- mult * 2
       a <- head(iris, 3)
-      a$Sepal.Length <- a$Sepal.Length * mult
+      a$Sepal.Length <- a$Sepal.Length * mult  #nolint
       expect_equal(mult, 2)
       a
     },

@@ -20,7 +20,7 @@ Suggests: testthat,
     rmarkdown,
     spelling
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Language: en-US
 SystemRequirements: xclip (https://github.com/astrand/xclip) or xsel
     (http://www.vergenet.net/~conrad/software/xsel/) for accessing the X11

@@ -23,7 +23,8 @@ None (or string if no.clipboard=TRUE)
 \description{
 \code{copy_rde_var} is intended to work with \code{\link{load_rde_var}}.
 The normal workflow would use \code{copy_rde_var} to copy a variable to
-the clipboard and then paste it in to the third argument of \code{load_rde_var}.
+the clipboard and then paste it in to the third argument of
+\code{load_rde_var}.
 }
 \details{
 The variable in the argument \code{var} is first saved using

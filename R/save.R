@@ -5,7 +5,8 @@
 #' @description
 #' \code{copy_rde_var} is intended to work with \code{\link{load_rde_var}}.
 #' The normal workflow would use \code{copy_rde_var} to copy a variable to
-#' the clipboard and then paste it in to the third argument of \code{load_rde_var}.
+#' the clipboard and then paste it in to the third argument of
+#' \code{load_rde_var}.
 #'
 #' @param var the variable to copy
 #' @param line.width the desired width of lines of text (-1 for no
@@ -90,26 +91,32 @@ base64_encode <- function(bin_data) {
   b64data <- character(0)
 
   for (i in 0:(ceiling(length(bin_data) / 3) - 1)) {
-    r0 <- if (i * 3 + 0 < length(bin_data)) bin_data[i * 3 + 1] else raw(0)
-    r1 <- if (i * 3 + 1 < length(bin_data)) bin_data[i * 3 + 2] else raw(0)
-    r2 <- if (i * 3 + 2 < length(bin_data)) bin_data[i * 3 + 3] else raw(0)
-    if (length(r0) == 0 && length(r1) == 0 && length(r2) == 0) {
-      break  # should never get here
-    }
-    else if (length(r1) == 0 && length(r2) == 0) {
-      num <- as.integer(r0) * 2 ^ 16
+    r <- lapply(1:3, function(j) {
+      if ((i * 3 + j) <= length(bin_data)) {
+        bin_data[i * 3 + j]
+      }
+      else {
+        raw(0)
+      }
+    })
+
+    if (length(r[[2]]) == 0 && length(r[[3]]) == 0) {
+      num <- as.integer(r[[1]]) * 2 ^ 16
       c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
       c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
       b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], padding, padding)
     }
-    else if (length(r2) == 0) {
-      num <- as.integer(r0) * 2 ^ 16 + as.integer(r1) * 2 ^ 8
+    else if (length(r[[3]]) == 0) {
+      num <- as.integer(r[[1]]) * 2 ^ 16 +
+        as.integer(r[[2]]) * 2 ^ 8
       c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
       c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
       c2 <- bitwShiftR(bitwAnd(num, 0xFC0), 6)
       b64data <- c(b64data, b64[c0 + 1], b64[c1 + 1], b64[c2 + 1], padding)
     } else {
-      num <- as.integer(r0) * 2 ^ 16 + as.integer(r1) * 2 ^ 8 + as.integer(r2)
+      num <- as.integer(r[[1]]) * 2 ^ 16 +
+        as.integer(r[[2]]) * 2 ^ 8 +
+        as.integer(r[[3]])
       c0 <- bitwShiftR(bitwAnd(num, 0xFC0000), 18)
       c1 <- bitwShiftR(bitwAnd(num, 0x3F000), 12)
       c2 <- bitwShiftR(bitwAnd(num, 0xFC0), 6)
