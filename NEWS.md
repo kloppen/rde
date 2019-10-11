@@ -2,7 +2,7 @@
 - First version submitted to CRAN
 - Incorporated feedback about vignette received from @billycomtek
 - Explicitly set some default arguments
-- Corrected minor bug in `decode_cache()` releated to empty cache strings
+- Corrected minor bug in `decode_cache()` related to empty cache strings
 - Added check that packages listed in Suggests are available before using
   them in tests
 
