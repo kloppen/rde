@@ -66,8 +66,8 @@ load_rde_var <- function(use.cache = FALSE,
                          cache) {
   cache_data <- decode_cache(cache)
 
-  if (use.cache) {
-    return(cache_data)
+  if(use.cache) {
+    return (cache_data)
   }
 
   tryCatch({
