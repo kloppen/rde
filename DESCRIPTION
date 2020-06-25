@@ -1,6 +1,6 @@
 Package: rde
 Title: Reproducible Data Embedding
-Version: 0.1.0.9001
+Version: 0.1.0.9003
 Authors@R: person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca", role = c("aut", "cre"))
 Description: Allows caching of raw data directly in R code. This allows R
   scripts and R Notebooks to be shared and re-run on a machine without access
@@ -20,7 +20,7 @@ Suggests: testthat,
     rmarkdown,
     spelling
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Language: en-US
 SystemRequirements: xclip (https://github.com/astrand/xclip) or xsel
     (http://www.vergenet.net/~conrad/software/xsel/) for accessing the X11
