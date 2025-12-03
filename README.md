@@ -1,5 +1,5 @@
 [![cran checks](https://cranchecks.info/badges/summary/rde)](https://cran.r-project.org/web/checks/check_results_rde.html)
-[![Build Status](https://travis-ci.com/kloppen/rde.svg?branch=master)](https://travis-ci.com/kloppen/rde)
+[![Build Status](https://www.travis-ci.com/kloppen/rde.svg?branch=master)](https://www.travis-ci.com/kloppen/rde)
 
 # Reproducible Data Exchange (rde)
 ## Overview
@@ -76,7 +76,7 @@ that it is tested.
 ## Bugs
 If you discover a bug in this package, please report it by creating an
 Issue on GitHub. Please include a 
-[reproducible example](https://www.tidyverse.org/help/) and also include
+[reproducible example](https://tidyverse.org/help/) and also include
 information on which version of R you are running and which version of
 each applicable package you have installed.
 
