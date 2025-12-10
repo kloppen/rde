@@ -1,5 +1,4 @@
 [![cran checks](https://cranchecks.info/badges/summary/rde)](https://cran.r-project.org/web/checks/check_results_rde.html)
-[![Build Status](https://www.travis-ci.com/kloppen/rde.svg?branch=master)](https://www.travis-ci.com/kloppen/rde)
 
 # Reproducible Data Exchange (rde)
 ## Overview
