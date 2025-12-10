@@ -81,7 +81,7 @@ copy_rde_var <- function(var, line.width=80L, no.clipboard=FALSE) {
     return(txt)
   }
   clipr::write_clip(txt, object_type = "character", breaks = NULL, eos = NULL,
-                    return_new = TRUE)
+                    return_new = TRUE, allow_non_interactive = TRUE)
 }
 
 base64_encode <- function(bin_data) {  #nolint cyclomatic

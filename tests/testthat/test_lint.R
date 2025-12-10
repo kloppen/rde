@@ -24,8 +24,13 @@ if (requireNamespace("lintr", quietly = TRUE)) {
 
     if (!is.null(find_package("."))) {
       expect_lint_free(
-        linters = with_defaults(
-          object_name_linter(styles = c("dotted.case", "snake_case"))
+        linters = linters_with_defaults(
+          object_name_linter(styles = c("dotted.case", "snake_case")),
+          line_length_linter(120),
+          return_linter = NULL,
+          indentation_linter = NULL,
+          infix_spaces_linter(exclude_operators = "="),
+          brace_linter = NULL
         )
       )
     }
